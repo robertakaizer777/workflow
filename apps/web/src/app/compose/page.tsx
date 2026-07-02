@@ -255,7 +255,6 @@ export default function ComposePage() {
       setSuccess(true);
       setContent("");
       setSelectedFormats([]);
-      setSelectedConnections([]);
       setMediaFiles([]);
       setMediaPreviews([]);
       setScheduledDate("");
