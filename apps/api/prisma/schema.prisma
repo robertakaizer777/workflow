@@ -38,6 +38,10 @@ model Workspace {
   members     WorkspaceMember[]
   connections SocialConnection[]
   posts       Post[]
+
+  // Integração Oauth da Meta por Workspace (White-Label)
+  metaAppId     String?
+  metaAppSecret String?
 }
 
 model WorkspaceMember {

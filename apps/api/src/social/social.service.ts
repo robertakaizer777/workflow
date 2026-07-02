@@ -9,6 +9,28 @@ export class SocialService {
     private encryption: EncryptionService
   ) {}
 
+  async updateWorkspaceMetaSettings(workspaceId: string, metaAppId: string, metaAppSecret: string) {
+    return this.prisma.workspace.update({
+      where: { id: workspaceId },
+      data: {
+        metaAppId,
+        metaAppSecret: this.encryption.encrypt(metaAppSecret)
+      }
+    });
+  }
+
+  async getWorkspaceMetaSettings(workspaceId: string) {
+    const workspace = await this.prisma.workspace.findUnique({
+      where: { id: workspaceId },
+      select: { metaAppId: true, metaAppSecret: true }
+    });
+
+    if (workspace?.metaAppSecret) {
+      workspace.metaAppSecret = this.encryption.decrypt(workspace.metaAppSecret);
+    }
+    return workspace;
+  }
+
   async getWorkspaceConnections(workspaceId: string) {
     const connections = await this.prisma.socialConnection.findMany({
       where: { workspaceId },

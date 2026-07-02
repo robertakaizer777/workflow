@@ -29,6 +29,11 @@ export default function IntegrationsPage() {
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [accountToDelete, setAccountToDelete] = useState<Connection | null>(null);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  
+  const [isMetaModalOpen, setIsMetaModalOpen] = useState(false);
+  const [metaAppId, setMetaAppId] = useState("");
+  const [metaAppSecret, setMetaAppSecret] = useState("");
+  const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !token) return;
@@ -45,11 +50,42 @@ export default function IntegrationsPage() {
 
   const handleOAuthConnect = async (platformId: string) => {
     if (!user || !token) return;
-    setLoadingAction(platformId);
+    
+    if (platformId === 'FACEBOOK' || platformId === 'INSTAGRAM') {
+      setSelectedPlatform(platformId);
+      setIsMetaModalOpen(true);
+      return;
+    }
 
-    // Redireciona o navegador do usuário fisicamente para o nosso Backend Node.js
-    // que, por sua vez, construirá a URL oficial da rede social com o Client ID e redirecionará a pessoa para lá.
+    setLoadingAction(platformId);
     window.location.href = `${API_URL}/social/auth/${platformId}?workspaceId=${user.workspaceId}&token=${token}`;
+  };
+
+  const handleSaveMetaSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !token || !selectedPlatform) return;
+    setLoadingAction(selectedPlatform);
+
+    try {
+      await fetch(`${API_URL}/social/settings`, {
+        method: "POST",
+        headers: { 
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          workspaceId: user.workspaceId,
+          metaAppId,
+          metaAppSecret
+        })
+      });
+
+      // Se salvou com sucesso, redireciona pro fluxo OAuth
+      window.location.href = `${API_URL}/social/auth/${selectedPlatform}?workspaceId=${user.workspaceId}&token=${token}`;
+    } catch (err) {
+      console.error(err);
+      setLoadingAction(null);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -296,6 +332,86 @@ export default function IntegrationsPage() {
         )}
       </AnimatePresence>
 
+      {/* Modal de Configuração da Meta (White-Label) */}
+      <AnimatePresence>
+        {isMetaModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+              onClick={() => setIsMetaModalOpen(false)}
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-background border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center border border-blue-600/20">
+                    <Key className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">Credenciais da Meta</h3>
+                    <p className="text-sm text-muted-foreground">Insira as chaves do seu aplicativo do Facebook.</p>
+                  </div>
+                </div>
+
+                <form onSubmit={handleSaveMetaSettings} className="space-y-4 mt-2">
+                  <div>
+                    <label className="text-sm font-semibold text-foreground mb-1 block">App ID</label>
+                    <input 
+                      type="text" 
+                      required
+                      placeholder="Ex: 1234567890"
+                      value={metaAppId}
+                      onChange={e => setMetaAppId(e.target.value)}
+                      className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-foreground"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-semibold text-foreground mb-1 block">App Secret</label>
+                    <input 
+                      type="password" 
+                      required
+                      placeholder="Cole sua chave secreta aqui"
+                      value={metaAppSecret}
+                      onChange={e => setMetaAppSecret(e.target.value)}
+                      className="w-full px-4 py-3 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-foreground"
+                    />
+                  </div>
+
+                  <div className="bg-blue-600/10 border border-blue-600/20 p-3 rounded-lg flex items-start gap-2 mt-2">
+                    <ShieldAlert className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-blue-600 font-medium">Suas chaves serão criptografadas e salvas com segurança no seu Workspace.</p>
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-2">
+                    <button 
+                      type="button"
+                      onClick={() => setIsMetaModalOpen(false)}
+                      className="px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button 
+                      type="submit"
+                      disabled={loadingAction === selectedPlatform || !metaAppId || !metaAppSecret}
+                      className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {loadingAction === selectedPlatform ? <Loader2 className="w-4 h-4 animate-spin" /> : "Salvar e Conectar"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

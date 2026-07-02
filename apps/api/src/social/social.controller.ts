@@ -17,6 +17,18 @@ export class SocialController {
     return this.socialService.getWorkspaceConnections(workspaceId);
   }
 
+  @Post('settings')
+  @UseGuards(JwtAuthGuard)
+  async saveMetaSettings(@Body() body: { workspaceId: string, metaAppId: string, metaAppSecret: string }) {
+    if (!body.workspaceId || !body.metaAppId || !body.metaAppSecret) {
+      throw new HttpException('Faltam parâmetros obrigatórios.', HttpStatus.BAD_REQUEST);
+    }
+    
+    // Na vida real, o ideal é criptografar o metaAppSecret no banco de dados.
+    await this.socialService.updateWorkspaceMetaSettings(body.workspaceId, body.metaAppId, body.metaAppSecret);
+    return { success: true };
+  }
+
   // 1. INÍCIO DO FLUXO OAUTH (REDIRECIONAMENTO)
   @Get('auth/:platform')
   async initiateOAuth(
@@ -29,14 +41,20 @@ export class SocialController {
       return res.status(400).send("Workspace ID é obrigatório para iniciar a conexão.");
     }
 
-    // O redirectUri NÃO pode ter query parameters dinâmicos no Facebook (precisa ser exato)
-    const redirectUri = `http://localhost:4001/social/callback/oauth`;
+    // Busca as chaves personalizadas do Workspace
+    const workspace = await this.socialService.getWorkspaceMetaSettings(workspaceId);
+    if (!workspace?.metaAppId) {
+      return res.status(400).send("As credenciais da Meta não foram configuradas para este Workspace.");
+    }
+
+    // O redirectUri será dinâmico para rodar tanto local quanto na nuvem
+    const host = process.env.RENDER_EXTERNAL_URL || 'http://localhost:4001';
+    const redirectUri = `${host}/social/callback/oauth`;
     
     // Passamos tudo empacotado no STATE
-    const statePayload = Buffer.from(JSON.stringify({ token, workspaceId, platform })).toString('base64');
+    const statePayload = Buffer.from(JSON.stringify({ token, workspaceId, platform, host })).toString('base64');
     
-    // Variáveis de Ambiente Reais que virão do arquivo .env
-    const clientId = process.env.META_CLIENT_ID; 
+    const clientId = workspace.metaAppId; 
     
     let oauthUrl = '';
 
@@ -84,7 +102,7 @@ export class SocialController {
     try {
       // Extrai os dados do state
       const decodedState = JSON.parse(Buffer.from(state, 'base64').toString('ascii'));
-      const { token, workspaceId, platform } = decodedState;
+      const { token, workspaceId, platform, host } = decodedState;
 
       if (!platform) {
         throw new Error('Platform missing in state');
@@ -92,8 +110,14 @@ export class SocialController {
 
       if (platform.toUpperCase() === 'INSTAGRAM' || platform.toUpperCase() === 'FACEBOOK') {
         // 1. Troca o código pelo token permanente
-        const redirectUri = `http://localhost:4001/social/callback/oauth`; // Mesma redirect_uri exata usada na ida
-        const accessToken = await this.metaService.exchangeCodeForToken(code, redirectUri);
+        const redirectUri = `${host}/social/callback/oauth`; 
+
+        const workspace = await this.socialService.getWorkspaceMetaSettings(workspaceId);
+        if (!workspace?.metaAppId || !workspace?.metaAppSecret) {
+          throw new Error('As credenciais da Meta não estão configuradas.');
+        }
+
+        const accessToken = await this.metaService.exchangeCodeForToken(code, redirectUri, workspace.metaAppId, workspace.metaAppSecret);
         
         // 2. Puxa os dados reais de TODAS as contas do Instagram conectadas
         const igAccounts = await this.metaService.getInstagramBusinessAccounts(accessToken);
