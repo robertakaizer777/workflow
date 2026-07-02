@@ -104,7 +104,7 @@ export class AuthService {
       // Master code para aprovar instantaneamente no ambiente de testes da nuvem
       isValid = true;
     } else {
-      isValid = user.twoFactorCode === data.code && user.twoFactorExpiresAt > new Date();
+      isValid = user.twoFactorCode === data.code && !!user.twoFactorExpiresAt && user.twoFactorExpiresAt > new Date();
     }
 
     if (!isValid) {
