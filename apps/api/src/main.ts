@@ -20,7 +20,7 @@ async function bootstrap() {
   
   // Habilitar CORS restrito
   app.enableCors({
-    origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : 'http://localhost:3000',
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
