@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: workflow-api
+    env: node
+    buildCommand: npm install && cd apps/api && npx prisma generate && npx prisma db push && npm run build
+    startCommand: cd apps/api && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
