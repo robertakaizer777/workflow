@@ -430,13 +430,14 @@ export default function ComposePage() {
               {activeBasePlatforms.length === 0 && <div className="text-sm text-muted-foreground/80">Selecione uma rede para ver o preview.</div>}
               {activeBasePlatforms.map(baseId => {
                 const platform = platformsMeta.find(p => p.id === baseId);
+                if (!platform) return null;
                 const isActive = activePreviewTab === baseId;
                 return (
                   <button 
                     key={baseId} onClick={() => setActivePreviewTab(baseId)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all shrink-0 ${isActive ? (baseId === 'INSTAGRAM' ? 'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 text-white' : 'bg-blue-600 text-white') : 'bg-secondary/50 text-muted-foreground hover:bg-secondary'}`}
                   >
-                    <platform.Icon /> {platform?.name}
+                    <platform.Icon /> {platform.name}
                   </button>
                 )
               })}
