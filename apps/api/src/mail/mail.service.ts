@@ -68,8 +68,7 @@ export class MailService {
             </div>
             <p style="color: #6b7280; font-size: 12px;">Este código expira em 5 minutos. Se não foi você, recomendamos alterar sua senha imediatamente.</p>
           </div>
-        `,
-        `,
+        `
       }).then(info => {
         this.logger.log(`✅ E-mail de 2FA enviado para ${to}`);
         this.logger.log(`🔗 PREVIEW DO E-MAIL: ${nodemailer.getTestMessageUrl(info)}`);
