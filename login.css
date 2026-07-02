@@ -1,0 +1,214 @@
+/* ==========================================
+   LOGIN SCREEN STYLES
+   ========================================== */
+:root {
+    --font-primary: 'Inter', sans-serif;
+    --font-display: 'Outfit', sans-serif;
+    
+    --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+    --bg-card: #141c2f;
+    --border-color: #222d45;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --primary: #6366f1;
+    --purple: #8b5cf6;
+    --primary-hover: #4f46e5;
+    
+    --red-alert: #f87171;
+    --red-alert-bg: rgba(239, 68, 68, 0.1);
+    --red-border: rgba(239, 68, 68, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 440px;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.login-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Brand header */
+.brand-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.brand-logo {
+    width: 54px;
+    height: 54px;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.6rem;
+    box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.5);
+    margin-bottom: 1rem;
+}
+
+.brand-header h1 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.4rem;
+}
+
+.brand-header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Error banner */
+.error-banner {
+    background-color: var(--red-alert-bg);
+    border: 1px solid var(--red-border);
+    color: var(--red-alert);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Form inputs */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.input-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background-color: rgba(9, 13, 22, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    background-color: rgba(9, 13, 22, 0.8);
+}
+
+/* Login button */
+.btn-login {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px -4px rgba(99, 102, 241, 0.5);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* Tips box */
+.login-tips {
+    margin-top: 2rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.login-tips p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.login-tips ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.login-tips li {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.login-tips code {
+    background-color: rgba(0,0,0,0.3);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    color: #a78bfa;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

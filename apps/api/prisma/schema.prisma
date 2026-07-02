@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("CLIENT") // Enum simulado
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  twoFactorCode      String?
+  twoFactorExpiresAt DateTime?
+
+  resetPasswordToken      String?
+  resetPasswordExpiresAt  DateTime?
+
+  workspaces WorkspaceMember[]
+  logs       AuditLog[]
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members     WorkspaceMember[]
+  connections SocialConnection[]
+  posts       Post[]
+}
+
+model WorkspaceMember {
+  id          String   @id @default(uuid())
+  userId      String
+  workspaceId String
+  role        String   @default("CLIENT") // Enum simulado
+  createdAt   DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+model SocialConnection {
+  id           String    @id @default(uuid())
+  workspaceId  String
+  platform     String // Enum simulado
+  pageId       String
+  username     String?
+  accessToken  String
+  refreshToken String?
+  expiresAt    DateTime?
+  status       String    @default("ACTIVE") // Enum simulado
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  workspace Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  metrics   PlatformMetric[]
+
+  @@unique([workspaceId, platform, pageId])
+}
+
+model PlatformMetric {
+  id             String   @id @default(uuid())
+  connectionId   String
+  followers      Int      @default(0)
+  reach          Int      @default(0)
+  impressions    Int      @default(0)
+  engagementRate Float    @default(0)
+  clicks         Int      @default(0)
+  recordedAt     DateTime @default(now())
+
+  connection SocialConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id           String    @id @default(uuid())
+  workspaceId  String
+  content      String
+  mediaUrls    String    @default("[]") // JSON string para Array no SQLite
+  platforms    String    @default("[]") // JSON string para Array no SQLite
+  status       String    @default("DRAFT") // Enum simulado
+  scheduledFor DateTime?
+  publishedAt  DateTime?
+  errorLogs    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  details   String
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}

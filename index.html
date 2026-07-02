@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialSphere - Dashboard de Métricas de Redes Sociais</title>
+    <meta name="description" content="Dashboard premium de monitoramento e insights para múltiplos clientes de redes sociais.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Styleheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h2 id="logo-text">SocialSphere</h2>
+            </div>
+            
+            <!-- Client Selector -->
+            <div class="client-selector-container">
+                <label for="client-select"><i class="fa-solid fa-users"></i> Cliente</label>
+                <div class="custom-select-wrapper">
+                    <select id="client-select" class="custom-select">
+                        <option value="">Carregando clientes...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-menu">
+                <p class="menu-label">Navegação</p>
+                <ul>
+                    <li class="active" data-page="overview">
+                        <a href="#"><i class="fa-solid fa-chart-simple"></i> Visão Geral</a>
+                    </li>
+                    <li data-page="posts">
+                        <a href="#"><i class="fa-solid fa-photo-film"></i> Publicações</a>
+                    </li>
+                    <li data-page="audience">
+                        <a href="#"><i class="fa-solid fa-user-group"></i> Público-Alvo</a>
+                    </li>
+                    <li data-page="settings">
+                        <a href="#"><i class="fa-solid fa-gear"></i> Integrações</a>
+                    </li>
+                </ul>
+
+                <p class="menu-label">Plataformas</p>
+                <div class="platform-filter-group">
+                    <button class="platform-btn active" data-platform="all">
+                        <i class="fa-solid fa-globe"></i> Todas
+                    </button>
+                    <button class="platform-btn" data-platform="instagram">
+                        <i class="fa-brands fa-instagram"></i> Instagram
+                    </button>
+                    <button class="platform-btn" data-platform="facebook">
+                        <i class="fa-brands fa-facebook"></i> Facebook
+                    </button>
+                    <button class="platform-btn" data-platform="tiktok">
+                        <i class="fa-brands fa-tiktok"></i> TikTok
+                    </button>
+                    <button class="platform-btn" data-platform="linkedin">
+                        <i class="fa-brands fa-linkedin"></i> LinkedIn
+                    </button>
+                    <button class="platform-btn" data-platform="youtube">
+                        <i class="fa-brands fa-youtube"></i> YouTube
+                    </button>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle">
+                    <i class="fa-solid fa-sun"></i>
+                    <div class="toggle-track" id="theme-switcher">
+                        <div class="toggle-thumb"></div>
+                    </div>
+                    <i class="fa-solid fa-moon"></i>
+                </div>
+                <div class="user-profile" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="avatar-container">
+                            <span class="avatar-letter" id="avatar-letter">G</span>
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name" id="user-name">Carregando...</span>
+                            <span class="user-role" id="user-role">Gestor</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                        <button id="btn-sidebar-profile-settings" title="Editar Perfil" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.05rem; padding: 0.2rem; transition: var(--transition-smooth);"><i class="fa-solid fa-user-gear"></i></button>
+                        <button id="btn-logout" title="Sair" style="background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.05rem; padding: 0.2rem; transition: var(--transition-smooth);"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-title-area">
+                    <h1 id="page-title">Painel Geral</h1>
+                    <p class="header-subtitle" id="client-business-type">Carregando informações...</p>
+                </div>
+                
+                <div class="header-actions">
+                    <!-- Date Picker -->
+                    <div class="date-selector">
+                        <i class="fa-regular fa-calendar"></i>
+                        <select id="date-range-select" class="header-select">
+                            <option value="7">Últimos 7 dias</option>
+                            <option value="30" selected>Últimos 30 dias</option>
+                            <option value="90">Últimos 90 dias</option>
+                        </select>
+                    </div>
+
+                    <!-- Customize Calendar button -->
+                    <button class="btn btn-secondary" id="btn-header-settings" title="Data Personalizada">
+                        <i class="fa-regular fa-calendar-days"></i> Personalizar Data
+                    </button>
+
+                    <!-- Export Report -->
+                    <button class="btn btn-primary" id="btn-export">
+                        <i class="fa-solid fa-file-pdf"></i> Exportar PDF
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Grid -->
+            <div class="dashboard-body">
+                <!-- Visão Geral (Overview) View -->
+                <div id="view-overview" class="page-view-container active-view">
+                    <!-- Quick KPI Metrics Grid -->
+                    <section class="kpi-grid" aria-label="Métricas Principais">
+                        <!-- Followers Card -->
+                        <div class="kpi-card" id="kpi-followers">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Total de Seguidores</span>
+                                <div class="kpi-icon icon-purple"><i class="fa-solid fa-user-plus"></i></div>
+                            </div>
+                            <div class="kpi-value-wrapper">
+                                <h3 class="kpi-value" id="val-followers">45.820</h3>
+                                <span class="kpi-trend trend-up" id="trend-followers">
+                                    <i class="fa-solid fa-arrow-up-right"></i> +12.4%
+                                </span>
+                            </div>
+                            <div class="kpi-footer">
+                                <span class="kpi-subtext">vs. período anterior</span>
+                            </div>
+                        </div>
+ 
+                        <!-- Reach Card -->
+                        <div class="kpi-card" id="kpi-reach">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Alcance Total</span>
+                                <div class="kpi-icon icon-blue"><i class="fa-solid fa-eye"></i></div>
+                            </div>
+                            <div class="kpi-value-wrapper">
+                                <h3 class="kpi-value" id="val-reach">142.905</h3>
+                                <span class="kpi-trend trend-up" id="trend-reach">
+                                    <i class="fa-solid fa-arrow-up-right"></i> +8.2%
+                                </span>
+                            </div>
+                            <div class="kpi-footer">
+                                <span class="kpi-subtext">vs. período anterior</span>
+                            </div>
+                        </div>
+ 
+                        <!-- Engagement Card -->
+                        <div class="kpi-card" id="kpi-engagement">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Taxa de Engajamento</span>
+                                <div class="kpi-icon icon-pink"><i class="fa-solid fa-heart-pulse"></i></div>
+                            </div>
+                            <div class="kpi-value-wrapper">
+                                <h3 class="kpi-value" id="val-engagement">4.82%</h3>
+                                <span class="kpi-trend trend-down" id="trend-engagement">
+                                    <i class="fa-solid fa-arrow-down-right"></i> -1.5%
+                                </span>
+                            </div>
+                            <div class="kpi-footer">
+                                <span class="kpi-subtext">vs. período anterior</span>
+                            </div>
+                        </div>
+ 
+                        <!-- Conversions/Actions Card -->
+                        <div class="kpi-card" id="kpi-actions">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Cliques no Link da Bio</span>
+                                <div class="kpi-icon icon-orange"><i class="fa-solid fa-arrow-pointer"></i></div>
+                            </div>
+                            <div class="kpi-value-wrapper">
+                                <h3 class="kpi-value" id="val-actions">2.140</h3>
+                                <span class="kpi-trend trend-up" id="trend-actions">
+                                    <i class="fa-solid fa-arrow-up-right"></i> +24.1%
+                                </span>
+                            </div>
+                            <div class="kpi-footer">
+                                <span class="kpi-subtext">vs. período anterior</span>
+                            </div>
+                        </div>
+                    </section>
+ 
+                     <!-- Charts Section -->
+                     <section class="charts-section" aria-label="Visualizações de Gráficos">
+                         <!-- Main Line Chart -->
+                         <div class="chart-card main-chart-card">
+                             <div class="chart-header">
+                                 <div class="chart-info">
+                                     <h3>Crescimento e Performance</h3>
+                                     <p>Histórico de alcance diário e interações</p>
+                                 </div>
+                                 <div class="chart-legend-custom" id="chart-legend-main">
+                                     <span class="legend-item"><span class="legend-color color-reach"></span>Alcance</span>
+                                     <span class="legend-item"><span class="legend-color color-interactions"></span>Interações</span>
+                                 </div>
+                             </div>
+                             <div class="chart-container">
+                                 <canvas id="mainPerformanceChart"></canvas>
+                             </div>
+                         </div>
+ 
+                         <!-- Side Grid: Audience Source & Best Times -->
+                         <div class="chart-side-grid">
+                             <!-- Demographics Pie Chart -->
+                             <div class="chart-card">
+                                 <div class="chart-header">
+                                     <div class="chart-info">
+                                         <h3>Origem do Público</h3>
+                                         <p>Principais cidades/estados</p>
+                                     </div>
+                                 </div>
+                                 <div class="chart-container-small">
+                                     <canvas id="demographicsChart"></canvas>
+                                 </div>
+                             </div>
+ 
+                             <!-- Top Channels Bar Chart -->
+                             <div class="chart-card">
+                                 <div class="chart-header">
+                                     <div class="chart-info">
+                                         <h3>Performance por Rede</h3>
+                                         <p>Engajamento relativo</p>
+                                     </div>
+                                 </div>
+                                 <div class="chart-container-small">
+                                     <canvas id="channelsChart"></canvas>
+                                 </div>
+                             </div>
+                         </div>
+                     </section>
+ 
+                     <!-- Top Performing Posts Table -->
+                     <section class="table-section" aria-label="Publicações de Maior Destaque">
+                         <div class="table-card">
+                             <div class="table-header">
+                                 <div class="table-info">
+                                     <h3>Posts em Destaque</h3>
+                                     <p>Publicações com maior taxa de engajamento no período</p>
+                                 </div>
+                             </div>
+                             <div class="table-responsive">
+                                 <table class="posts-table">
+                                     <thead>
+                                         <tr>
+                                             <th>Publicação</th>
+                                             <th>Rede</th>
+                                             <th>Formato</th>
+                                             <th>Alcance</th>
+                                             <th>Likes</th>
+                                             <th>Comentários</th>
+                                             <th>Engajamento</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody id="top-posts-tbody">
+                                         <!-- Rendered dynamically by JavaScript -->
+                                     </tbody>
+                                 </table>
+                             </div>
+                         </div>
+                     </section>
+                 </div>
+
+                 <!-- Integrações (Settings) View -->
+                 <div id="view-settings" class="page-view-container" style="display: none;">
+                     <div class="chart-card" style="margin-bottom: 2rem;">
+                         <div class="chart-header">
+                             <div class="chart-info">
+                                 <h3>Conexões de Contas Oficiais</h3>
+                                 <p>Gerencie as integrações de APIs de redes sociais dos seus clientes de forma individualizada.</p>
+                             </div>
+                         </div>
+                         <div style="padding: 1rem 0; display: flex; flex-direction: column; gap: 1.8rem;">
+                             
+                             <!-- 1. Instagram Connection Block -->
+                             <div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); flex-wrap: wrap; gap: 1rem;">
+                                 <div style="display: flex; gap: 1rem; flex: 1; min-width: 250px;">
+                                     <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--pink-bg); color: var(--pink); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                                         <i class="fa-brands fa-instagram"></i>
+                                     </div>
+                                     <div style="flex: 1;">
+                                         <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Instagram Business</h4>
+                                         <span id="instagram-connection-status" style="font-size: 0.8rem; color: var(--text-secondary);">Não conectado. Vincule sua conta para receber insights.</span>
+                                         
+                                         <details style="margin-top: 0.8rem; cursor: pointer; border-top: 1px dashed var(--border-color); padding-top: 0.6rem;">
+                                             <summary style="font-size: 0.78rem; font-weight: 600; color: var(--primary); outline: none;">📖 Passo a Passo de Conexão</summary>
+                                             <ol style="font-size: 0.75rem; color: var(--text-secondary); padding-left: 1.2rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                                                 <li>Configure sua conta do Instagram para o perfil **Comercial** (Business) ou de **Criador**.</li>
+                                                 <li>Vincule esse perfil do Instagram a uma **Página do Facebook** da qual você seja administrador.</li>
+                                                 <li>Acesse o portal da Meta do desenvolvedor e registre seu redirecionamento OAuth de login do app.</li>
+                                                 <li>Clique no botão "Conectar" ao lado e autorize as permissões de insights de anúncios e Instagram.</li>
+                                             </ol>
+                                         </details>
+                                     </div>
+                                 </div>
+                                 <button class="btn btn-primary" id="btn-connect-meta">
+                                     <i class="fa-solid fa-link"></i> Conectar Instagram
+                                 </button>
+                             </div>
+
+                             <!-- 2. Facebook Connection Block -->
+                             <div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); flex-wrap: wrap; gap: 1rem;">
+                                 <div style="display: flex; gap: 1rem; flex: 1; min-width: 250px;">
+                                     <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--blue-bg); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                                         <i class="fa-brands fa-facebook"></i>
+                                     </div>
+                                     <div style="flex: 1;">
+                                         <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">Facebook Pages</h4>
+                                         <span style="font-size: 0.8rem; color: var(--text-secondary);">Não integrado. Conecte páginas corporativas para ler alcance e curtidas.</span>
+                                         
+                                         <details style="margin-top: 0.8rem; cursor: pointer; border-top: 1px dashed var(--border-color); padding-top: 0.6rem;">
+                                             <summary style="font-size: 0.78rem; font-weight: 600; color: var(--primary); outline: none;">📖 Passo a Passo de Conexão</summary>
+                                             <ol style="font-size: 0.75rem; color: var(--text-secondary); padding-left: 1.2rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                                                 <li>Crie uma conta de desenvolvedor no [Meta for Developers](https://developers.facebook.com/).</li>
+                                                 <li>Associe um aplicativo de tipo "Empresa" para obter as chaves de API.</li>
+                                                 <li>Conecte o token de leitura da página com a permissão `pages_read_engagement`.</li>
+                                             </ol>
+                                         </details>
+                                     </div>
+                                 </div>
+                                 <button class="btn btn-secondary" onclick="showToast('Facebook Pages: Fluxo OAuth simulado com sucesso!', 'success')">
+                                     <i class="fa-solid fa-link"></i> Conectar Facebook
+                                 </button>
+                             </div>
+
+                             <!-- 3. TikTok Connection Block -->
+                             <div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); flex-wrap: wrap; gap: 1rem;">
+                                 <div style="display: flex; gap: 1rem; flex: 1; min-width: 250px;">
+                                     <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(0,0,0,0.06); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                                         <i class="fa-brands fa-tiktok"></i>
+                                     </div>
+                                     <div style="flex: 1;">
+                                         <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">TikTok Business</h4>
+                                         <span style="font-size: 0.8rem; color: var(--text-secondary);">Não integrado. Conecte contas corporativas do TikTok.</span>
+                                         
+                                         <details style="margin-top: 0.8rem; cursor: pointer; border-top: 1px dashed var(--border-color); padding-top: 0.6rem;">
+                                             <summary style="font-size: 0.78rem; font-weight: 600; color: var(--primary); outline: none;">📖 Passo a Passo de Conexão</summary>
+                                             <ol style="font-size: 0.75rem; color: var(--text-secondary); padding-left: 1.2rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                                                 <li>Crie uma conta de desenvolvedor no **TikTok Developer Portal**.</li>
+                                                 <li>Registre seu aplicativo no portal de desenvolvedores do TikTok.</li>
+                                                 <li>Selecione as permissões `user.info.basic` e `video.list` para coletar dados de seguidores e performance.</li>
+                                                 <li>Realize a autenticação OAuth 2.0 pelo botão para sincronizar o token seguro.</li>
+                                             </ol>
+                                         </details>
+                                     </div>
+                                 </div>
+                                 <button class="btn btn-secondary" onclick="showToast('TikTok Business: Fluxo OAuth simulado com sucesso!', 'success')">
+                                     <i class="fa-solid fa-link"></i> Conectar TikTok
+                                 </button>
+                             </div>
+
+                             <!-- 4. LinkedIn Connection Block -->
+                             <div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); flex-wrap: wrap; gap: 1rem;">
+                                 <div style="display: flex; gap: 1rem; flex: 1; min-width: 250px;">
+                                     <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                                         <i class="fa-brands fa-linkedin"></i>
+                                     </div>
+                                     <div style="flex: 1;">
+                                         <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">LinkedIn Pages</h4>
+                                         <span style="font-size: 0.8rem; color: var(--text-secondary);">Não integrado. Vincule páginas de empresas do LinkedIn.</span>
+                                         
+                                         <details style="margin-top: 0.8rem; cursor: pointer; border-top: 1px dashed var(--border-color); padding-top: 0.6rem;">
+                                             <summary style="font-size: 0.78rem; font-weight: 600; color: var(--primary); outline: none;">📖 Passo a Passo de Conexão</summary>
+                                             <ol style="font-size: 0.75rem; color: var(--text-secondary); padding-left: 1.2rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                                                 <li>Crie uma conta de desenvolvedor corporativo no **LinkedIn Developers**.</li>
+                                                 <li>Crie um aplicativo corporativo e associe à sua Company Page oficial.</li>
+                                                 <li>Solicite acesso aos escopos `r_organization_social` para ler estatísticas e compartilhamentos da página.</li>
+                                                 <li>Finalize a autenticação OAuth para capturar o Access Token do LinkedIn.</li>
+                                             </ol>
+                                         </details>
+                                     </div>
+                                 </div>
+                                 <button class="btn btn-secondary" onclick="showToast('LinkedIn Pages: Fluxo OAuth simulado com sucesso!', 'success')">
+                                     <i class="fa-solid fa-link"></i> Conectar LinkedIn
+                                 </button>
+                             </div>
+
+                             <!-- 5. YouTube Connection Block -->
+                             <div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 1.5rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-md); flex-wrap: wrap; gap: 1rem;">
+                                 <div style="display: flex; gap: 1rem; flex: 1; min-width: 250px;">
+                                     <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--youtube-bg); color: var(--youtube); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                                         <i class="fa-brands fa-youtube"></i>
+                                     </div>
+                                     <div style="flex: 1;">
+                                         <h4 style="font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.2rem;">YouTube Channel</h4>
+                                         <span style="font-size: 0.8rem; color: var(--text-secondary);">Não integrado. Vincule canais do YouTube para ler visualizações e inscritos.</span>
+                                         
+                                         <details style="margin-top: 0.8rem; cursor: pointer; border-top: 1px dashed var(--border-color); padding-top: 0.6rem;">
+                                             <summary style="font-size: 0.78rem; font-weight: 600; color: var(--primary); outline: none;">📖 Passo a Passo de Conexão</summary>
+                                             <ol style="font-size: 0.75rem; color: var(--text-secondary); padding-left: 1.2rem; margin-top: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem;">
+                                                 <li>Acesse o **Google Cloud Console** com a conta dona do canal do YouTube.</li>
+                                                 <li>Crie um projeto de Cloud e ative a **YouTube Data API v3**.</li>
+                                                 <li>Vá em Credenciais, crie um OAuth 2.0 Client ID e configure a Tela de Consentimento.</li>
+                                                 <li>Clique ao lado para realizar o login seguro do Google e autorizar a leitura do seu canal.</li>
+                                             </ol>
+                                         </details>
+                                     </div>
+                                 </div>
+                                 <button class="btn btn-secondary" onclick="showToast('YouTube Channel: Fluxo OAuth simulado com sucesso!', 'success')">
+                                     <i class="fa-solid fa-link"></i> Conectar YouTube
+                                 </button>
+                             </div>
+
+                         </div>
+                     </div>
+
+                      <!-- Personalização Card -->
+                      <div class="chart-card" style="margin-top: 1.5rem;">
+                          <div class="chart-header">
+                              <div class="chart-info">
+                                  <h3>Personalização do Painel</h3>
+                                  <p>Customize a identidade visual da plataforma para seus clientes.</p>
+                              </div>
+                          </div>
+                          <div style="padding: 1rem 0; display: flex; flex-direction: column; gap: 1.5rem;">
+                              <!-- Branding setting -->
+                              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                  <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Nome da Plataforma (Branding)</label>
+                                  <div style="display: flex; gap: 1rem; width: 100%; flex-wrap: wrap;">
+                                      <input type="text" id="input-brand-name" value="SocialSphere" style="flex: 1; min-width: 200px; padding: 0.75rem 1rem; background-color: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-primary); font-size: 0.9rem; outline: none;">
+                                      <button class="btn btn-primary" id="btn-save-branding" style="padding: 0.75rem 1.5rem;">Salvar Nome</button>
+                                  </div>
+                              </div>
+
+                              <!-- Color settings -->
+                              <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                                  <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Cor Principal de Destaque</label>
+                                  <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                                      <button class="color-picker-btn" data-color="indigo" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; background-color: #6366f1;" title="Indigo"></button>
+                                      <button class="color-picker-btn" data-color="purple" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; background-color: #8b5cf6;" title="Roxo"></button>
+                                      <button class="color-picker-btn" data-color="emerald" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; background-color: #10b981;" title="Esmeralda"></button>
+                                      <button class="color-picker-btn" data-color="rose" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; background-color: #f43f5e;" title="Rosa"></button>
+                                      <button class="color-picker-btn" data-color="yellow" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; background-color: #eab308;" title="Amarelo"></button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+             </div>
+        </main>
+    </div>
+
+    <!-- Notification system -->
+    <div class="notification-container" id="notification-area"></div>
+
+    <!-- Profile Settings Modal -->
+    <div class="modal-backdrop" id="profile-settings-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Configurações do Perfil</h2>
+                <button class="btn-close" id="btn-close-profile-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="profile-settings-form">
+                <div class="modal-body">
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.2rem;">Atualize suas informações de login e perfil de gestor/cliente:</p>
+                    
+                    <div class="input-group" style="margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                        <label for="profile-name-input"><i class="fa-regular fa-user"></i> Nome Completo</label>
+                        <input type="text" id="profile-name-input" style="width: 100%; padding: 0.75rem 1rem; background-color: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none; font-family: var(--font-primary);" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                        <label for="profile-email-input"><i class="fa-regular fa-envelope"></i> E-mail (Nome de Usuário)</label>
+                        <input type="email" id="profile-email-input" style="width: 100%; padding: 0.75rem 1rem; background-color: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none; font-family: var(--font-primary);" required>
+                    </div>
+                    <div class="input-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+                        <label for="profile-password-input"><i class="fa-regular fa-lock"></i> Nova Senha (deixe vazio para manter a atual)</label>
+                        <input type="password" id="profile-password-input" placeholder="Nova senha de acesso" style="width: 100%; padding: 0.75rem 1rem; background-color: var(--bg-app); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); outline: none; font-family: var(--font-primary);">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-profile-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-profile-settings">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Date Picker Modal (Calendar months list) -->
+    <div class="modal-backdrop" id="custom-date-modal">
+        <div class="modal-card" style="width: 420px;">
+            <div class="modal-header">
+                <h2>Selecione o Período</h2>
+                <button class="btn-close" id="btn-close-date-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.2rem;">Escolha um dos meses abaixo para filtrar os dados históricos:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;" id="custom-months-grid">
+                    <!-- Dynamic Month buttons populated by app.js -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btn-cancel-date-modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom modal for export preview -->
+    <div class="modal-backdrop" id="export-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Exportar Relatório Mensal</h2>
+                <button class="btn-close" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>O relatório consolidado em PDF do cliente <strong id="modal-client-name">NutriLife</strong> está pronto para geração.</p>
+                <div class="report-preview-box">
+                    <div class="preview-item">
+                        <span>Período:</span>
+                        <strong id="modal-period">Últimos 30 dias</strong>
+                    </div>
+                    <div class="preview-item">
+                        <span>Plataformas:</span>
+                        <strong id="modal-platforms">Todas (Instagram, Facebook, TikTok, LinkedIn)</strong>
+                    </div>
+                    <div class="preview-item">
+                        <span>Métricas resumidas:</span>
+                        <ul>
+                            <li>Seguidores: <strong id="modal-followers-val">45.820</strong></li>
+                            <li>Alcance: <strong id="modal-reach-val">142.905</strong></li>
+                            <li>Taxa de Engajamento: <strong id="modal-engagement-val">4.82%</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btn-cancel-modal">Cancelar</button>
+                <button class="btn btn-primary" id="btn-confirm-export">
+                    <i class="fa-solid fa-download"></i> Gerar e Baixar PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

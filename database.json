@@ -1,0 +1,66 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "NutriLife Admin",
+      "email": "nutrilife@cliente.com",
+      "password_hash": "$2b$10$Y5n2Cg1jWpSwWsk5Xn1fGu0cWJ2G8zM8z8H8z8H8z8H8z8H8z8H8S",
+      "role": "client",
+      "clientId": "client_1"
+    },
+    {
+      "id": 2,
+      "name": "TechCore Admin",
+      "email": "techcore@cliente.com",
+      "password_hash": "$2b$10$Y5n2Cg1jWpSwWsk5Xn1fGu0cWJ2G8zM8z8H8z8H8z8H8z8H8z8H8S",
+      "role": "client",
+      "clientId": "client_2"
+    },
+    {
+      "id": 3,
+      "name": "BellaModa Admin",
+      "email": "bellamoda@cliente.com",
+      "password_hash": "$2b$10$Y5n2Cg1jWpSwWsk5Xn1fGu0cWJ2G8zM8z8H8z8H8z8H8z8H8z8H8S",
+      "role": "client",
+      "clientId": "client_3"
+    },
+    {
+      "id": 4,
+      "name": "Iverson fontes",
+      "email": "admin@gestor.com",
+      "password_hash": "$2b$10$Y5n2Cg1jWpSwWsk5Xn1fGu0cWJ2G8zM8z8H8z8H8z8H8z8H8z8H8S",
+      "role": "admin",
+      "clientId": "all"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "userId": 1,
+      "platform": "instagram",
+      "pageId": "17841470941954409",
+      "accessToken": "EAAV2ZCvFspaIBR9AXOn99ORlSYjspwKotd1dMO72uybPBmbM3ChjCOGypM5zcqRFz6PFTvHZAf27q8eULIFzVLn6HGmZCSgsvhNsrrQZC6P29EKijx3umrH0Tpg6z4pEJvEf7g3uPCZCtqMs991KdSnAp1YMLHcYTKcWsaQTu3B2mOuPZAzAvFKeDEZBldcSHNkRDZCa1pQTZAZAaVnxhy",
+      "connectedAt": "2026-06-26T06:15:08.916Z"
+    },
+    {
+      "id": 2,
+      "userId": 4,
+      "platform": "instagram",
+      "pageId": "17841470941954409",
+      "accessToken": "EAAV2ZCvFspaIBR27UZC4DUWwhmeSB4M7oLmZAINiPw3cuM95zLPR7VR1sgoPxJMCSFjnOX4w3ShlGMakkZChyvIZBAZBBadhRgquMHsXeKXZCs990WZCza5ZBuKJsAfiQLqXD1EpdTQ4ZBzUNMB3ycdA0cmG5lBjrheC2ZCKX7buScJZBUvLxnidEg20RfZAk8HZAPaVBZCH3y9WpJpGeya",
+      "connectedAt": "2026-06-26T06:16:38.960Z"
+    }
+  ],
+  "metrics": {
+    "client_1": {
+      "followers": 0,
+      "reach": 0,
+      "updatedAt": "2026-06-26T06:15:08.917Z"
+    },
+    "all": {
+      "followers": 0,
+      "reach": 0,
+      "updatedAt": "2026-06-26T06:16:38.961Z"
+    }
+  }
+}

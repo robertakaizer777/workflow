@@ -1,0 +1,106 @@
+"use client";
+
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { LayoutDashboard, PenSquare, Share2, Calendar, Settings, LogOut } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useStore } from "@/store/useStore";
+import { useEffect, useState } from "react";
+
+import { AccountSwitcher } from "@/components/AccountSwitcher";
+
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeToggle } from "@/components/ThemeToggle";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { token, logout } = useStore();
+  const [mounted, setMounted] = useState(false);
+  
+  const isAuthPage = pathname === "/login" || pathname === "/register" || pathname === "/forgot-password" || pathname === "/reset-password";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      if (!token && !isAuthPage) {
+        router.push("/login");
+      }
+    }
+  }, [mounted, token, isAuthPage, router]);
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
+
+  return (
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased ${!mounted ? 'bg-background' : 'flex h-screen overflow-hidden'}`}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+          {mounted && (
+            <>
+              {/* Sidebar */}
+              {!isAuthPage && (
+                <aside className="w-64 bg-zinc-950 border-r border-border flex flex-col shrink-0 z-50 relative">
+                  <div className="h-16 flex items-center px-6 border-b border-border shrink-0">
+                    <div className="w-8 h-8 bg-gradient-to-tr from-primary to-purple-600 rounded-lg mr-3 shadow-[0_0_15px_rgba(195,0,16,0.4)]" />
+                    <span className="font-bold text-lg tracking-tight text-white">PostFlow AI</span>
+                  </div>
+                  
+                  <AccountSwitcher />
+                  
+                  <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <Link href="/" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname === '/' ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                      <LayoutDashboard className="w-4 h-4" /> Dashboard
+                    </Link>
+                    <Link href="/compose" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname === '/compose' ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                      <PenSquare className="w-4 h-4" /> Novo Post
+                    </Link>
+                    <Link href="/calendar" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname === '/calendar' ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                      <Calendar className="w-4 h-4" /> Calendário
+                    </Link>
+                    <Link href="/integrations" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname === '/integrations' ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                      <Share2 className="w-4 h-4" /> Integrações
+                    </Link>
+                  </nav>
+
+                  <div className="p-4 border-t border-border space-y-1">
+                    <ThemeToggle />
+                    <Link href="/settings" className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname === '/settings' ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                      <Settings className="w-4 h-4" /> Configurações
+                    </Link>
+                    <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-red-500/80 hover:text-red-500 hover:bg-red-500/10 transition-colors">
+                      <LogOut className="w-4 h-4" /> Sair da Conta
+                    </button>
+                  </div>
+                </aside>
+              )}
+
+              {/* Main Content */}
+              <main className="flex-1 overflow-y-auto bg-background relative flex flex-col">
+                {!isAuthPage && <div className="absolute top-0 left-0 w-full h-96 bg-primary/5 blur-3xl -z-10 pointer-events-none" />}
+                {children}
+              </main>
+            </>
+          )}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

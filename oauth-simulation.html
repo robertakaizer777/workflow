@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title-tag">Login Social - Integração de Aplicativos</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .meta-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 12px 28px 0 rgba(0,0,0,0.1), 0 2px 4px 0 rgba(0,0,0,0.1);
+            width: 500px;
+            max-width: 90%;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .meta-header {
+            background-color: #1877f2;
+            color: #ffffff;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+        .meta-header i {
+            font-size: 1.3rem;
+        }
+        .meta-body {
+            padding: 2rem 1.5rem;
+        }
+        .app-pairing {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .pairing-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+        .icon-social { background-color: #1877f2; color: white; transition: background-color 0.3s ease; }
+        .icon-app { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .pairing-line {
+            height: 2px;
+            background-color: #e4e6eb;
+            width: 80px;
+            position: relative;
+        }
+        .pairing-line::after {
+            content: '\f0c1';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 0 0.4rem;
+            color: #8a8d91;
+            font-size: 0.9rem;
+        }
+        .permission-info h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            text-align: center;
+        }
+        .permission-info p {
+            color: #65676b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .permissions-list {
+            background-color: #f7f8fa;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        .permission-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: 0.85rem;
+            color: #1c1e21;
+            margin-bottom: 0.8rem;
+        }
+        .permission-item:last-child {
+            margin-bottom: 0;
+        }
+        .permission-item i {
+            color: #1877f2;
+            margin-top: 0.15rem;
+            transition: color 0.3s ease;
+        }
+        .permission-item-text strong {
+            display: block;
+            margin-bottom: 0.1rem;
+        }
+        .permission-item-text span {
+            color: #65676b;
+        }
+        .meta-footer {
+            background-color: #f0f2f5;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 1px solid #e4e6eb;
+        }
+        .btn-meta {
+            padding: 0.6rem 1.5rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            background-color: #e4e6eb;
+            color: #4b4f56;
+        }
+        .btn-cancel:hover { background-color: #d8dadf; }
+        .btn-allow {
+            background-color: #1877f2;
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+        .btn-allow:hover { background-color: #1771e6; }
+    </style>
+</head>
+<body>
+    <div class="meta-card">
+        <div class="meta-header" id="header-bar">
+            <i class="fa-brands fa-facebook" id="header-icon"></i>
+            <span id="header-title">Entrar com o Facebook</span>
+        </div>
+        <div class="meta-body">
+            <div class="app-pairing">
+                <div class="pairing-icon icon-social" id="pairing-brand-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                <div class="pairing-line"></div>
+                <div class="pairing-icon icon-app"><i class="fa-solid fa-chart-line"></i></div>
+            </div>
+            
+            <div class="permission-info">
+                <h2 id="permission-heading">Conectar o SocialSphere ao Facebook</h2>
+                <p>O aplicativo <strong>SocialSphere</strong> solicita permissão para acessar suas estatísticas de redes sociais.</p>
+            </div>
+
+            <div class="permissions-list" id="permission-list-container">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+        <div class="meta-footer">
+            <button class="btn-meta btn-cancel" id="btn-cancel">Cancelar</button>
+            <button class="btn-meta btn-allow" id="btn-allow">Permitir Acesso</button>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const platform = urlParams.get('platform') || 'facebook';
+        const state = urlParams.get('state') || '1';
+        const redirectUri = urlParams.get('redirect_uri');
+
+        // Brand configurations
+        const brandConfigs = {
+            facebook: {
+                title: "Entrar com o Facebook",
+                icon: "fa-facebook",
+                pairingIcon: "fa-facebook-f",
+                color: "#1877f2",
+                heading: "Conectar o SocialSphere ao Facebook",
+                permissions: [
+                    { title: "Ver métricas do Instagram", desc: "Permite obter dados de engajamento do perfil de criador vinculados." },
+                    { title: "Listar Páginas administradas", desc: "Necessário para sincronizar feeds comerciais e estatísticas de postagens." }
+                ]
+            },
+            instagram: {
+                title: "Entrar com o Facebook (Instagram)",
+                icon: "fa-instagram",
+                pairingIcon: "fa-instagram",
+                color: "#e1306c",
+                heading: "Vincular Insights do Instagram",
+                permissions: [
+                    { title: "Ver insights de perfil do Instagram", desc: "Leitura de alcance comercial, visualizações e cliques em links." },
+                    { title: "Ler publicações e comentários", desc: "Sincroniza os posts de maior performance do feed." }
+                ]
+            },
+            tiktok: {
+                title: "Entrar com o TikTok",
+                icon: "fa-tiktok",
+                pairingIcon: "fa-tiktok",
+                color: "#000000",
+                heading: "Autorizar SocialSphere no TikTok",
+                permissions: [
+                    { title: "Acessar informações do seu perfil", desc: "Permite ler nome de usuário, avatar e contagem de seguidores." },
+                    { title: "Listar relatórios de performance de vídeos", desc: "Acessa contagem de visualizações de vídeos e curtidas." }
+                ]
+            },
+            linkedin: {
+                title: "Entrar com o LinkedIn",
+                icon: "fa-linkedin",
+                pairingIcon: "fa-linkedin-in",
+                color: "#0077b5",
+                heading: "Vincular Conta LinkedIn Pages",
+                permissions: [
+                    { title: "Acessar dados de sua Company Page", desc: "Permite ler alcance de postagens corporativas e seguidores da empresa." },
+                    { title: "Gerenciar atualizações de postagens", desc: "Necessário para listar as publicações recentes na tabela." }
+                ]
+            },
+            youtube: {
+                title: "Fazer login com o Google (YouTube)",
+                icon: "fa-youtube",
+                pairingIcon: "fa-youtube",
+                color: "#ff0000",
+                heading: "Permissões de Canal do YouTube",
+                permissions: [
+                    { title: "Visualizar relatórios do YouTube Analytics", desc: "Necessário para coletar visualizações de canal, inscritos e engajamento." },
+                    { title: "Listar dados do seu canal", desc: "Permite ler detalhes do perfil do canal e vídeos recentes." }
+                ]
+            }
+        };
+
+        const config = brandConfigs[platform] || brandConfigs.facebook;
+
+        // Apply layouts
+        document.getElementById("title-tag").innerText = config.title;
+        document.getElementById("header-title").innerText = config.title;
+        document.getElementById("header-bar").style.backgroundColor = config.color;
+        document.getElementById("permission-heading").innerText = config.heading;
+        
+        // Header Icon
+        const headerIcon = document.getElementById("header-icon");
+        headerIcon.className = `fa-brands ${config.icon}`;
+
+        // Pairing icon
+        const pairingIcon = document.getElementById("pairing-brand-icon");
+        pairingIcon.style.backgroundColor = config.color;
+        pairingIcon.innerHTML = `<i class="fa-brands ${config.pairingIcon}"></i>`;
+
+        // Allow button style
+        const btnAllow = document.getElementById("btn-allow");
+        btnAllow.style.backgroundColor = config.color;
+
+        // Render permissions
+        const permissionContainer = document.getElementById("permission-list-container");
+        permissionContainer.innerHTML = "";
+        config.permissions.forEach(p => {
+            const item = document.createElement("div");
+            item.className = "permission-item";
+            item.innerHTML = `
+                <i class="fa-solid fa-circle-check" style="color: ${config.color}"></i>
+                <div class="permission-item-text">
+                    <strong>${p.title}</strong>
+                    <span>${p.desc}</span>
+                </div>
+            `;
+            permissionContainer.appendChild(item);
+        });
+
+        // Click actions
+        document.getElementById('btn-cancel').addEventListener('click', () => {
+            window.location.href = `/#settings?connection=canceled&platform=${platform}`;
+        });
+
+        document.getElementById('btn-allow').addEventListener('click', () => {
+            if (redirectUri) {
+                const callbackUrl = `${redirectUri}?code=MOCK_${platform.toUpperCase()}_AUTH_CODE_29841&state=${state}`;
+                window.location.href = callbackUrl;
+            } else {
+                window.location.href = `/#settings?connection=success&platform=${platform}`;
+            }
+        });
+    </script>
+</body>
+</html>
