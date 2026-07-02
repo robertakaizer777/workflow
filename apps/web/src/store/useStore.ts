@@ -26,11 +26,16 @@ export const useStore = create<AppState>()(
       isAuthenticated: false,
       activeConnectionId: null,
       
-      setSession: (user, token) => set({ 
-        user, 
-        token, 
-        isAuthenticated: true 
-      }),
+      setSession: (user, token) => {
+        if (typeof window !== 'undefined') {
+          document.cookie = `token=${token}; path=/; max-age=86400; samesite=lax`;
+        }
+        set({ 
+          user, 
+          token, 
+          isAuthenticated: true 
+        });
+      },
       
       setActiveConnection: (id) => set({ activeConnectionId: id }),
       
