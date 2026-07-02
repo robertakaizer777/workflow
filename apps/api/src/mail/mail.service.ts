@@ -12,6 +12,22 @@ export class MailService {
 
   private async initEthereal() {
     try {
+      if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+        // Usa provedor de email REAL (Gmail, Resend, etc)
+        this.transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT) || 465,
+          secure: true,
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          },
+        });
+        this.logger.log('📩 SMTP Real configurado com sucesso!');
+        return;
+      }
+
+      // Fallback: Cria uma conta de testes automática no Ethereal
       // Cria uma conta de testes automática no Ethereal
       const testAccount = await nodemailer.createTestAccount();
       
@@ -39,7 +55,7 @@ export class MailService {
     }
 
     try {
-      const info = await this.transporter.sendMail({
+      this.transporter.sendMail({
         from: '"PostFlow AI Security" <security@postflow.ai>',
         to,
         subject: 'Seu Código de Segurança 2FA',
@@ -53,10 +69,13 @@ export class MailService {
             <p style="color: #6b7280; font-size: 12px;">Este código expira em 5 minutos. Se não foi você, recomendamos alterar sua senha imediatamente.</p>
           </div>
         `,
+        `,
+      }).then(info => {
+        this.logger.log(`✅ E-mail de 2FA enviado para ${to}`);
+        this.logger.log(`🔗 PREVIEW DO E-MAIL: ${nodemailer.getTestMessageUrl(info)}`);
+      }).catch(err => {
+        this.logger.error('Erro ao enviar email silencioso:', err);
       });
-
-      this.logger.log(`✅ E-mail de 2FA enviado para ${to}`);
-      this.logger.log(`🔗 PREVIEW DO E-MAIL: ${nodemailer.getTestMessageUrl(info)}`);
     } catch (error) {
       this.logger.error('Erro ao enviar e-mail 2FA', error);
     }
