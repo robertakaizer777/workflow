@@ -44,7 +44,7 @@ export class SocialController {
     const clientId = process.env.META_CLIENT_ID;
 
     if (!clientId) {
-      return res.status(400).send("As credenciais globais da Meta não foram configuradas no servidor (.env).");
+      return res.status(400).send("A integração real com a Meta exige que o dono do SaaS configure o META_CLIENT_ID no .env do servidor.");
     }
 
     // O redirectUri será dinâmico para rodar tanto local quanto na nuvem
@@ -113,7 +113,7 @@ export class SocialController {
         
         // 2. Puxa os dados reais de TODAS as contas do Instagram conectadas
         const igAccounts = await this.metaService.getInstagramBusinessAccounts(accessToken);
-        
+
         // 3. Salva no banco de dados para cada conta encontrada
         for (const account of igAccounts) {
           const connection = await this.socialService.saveOAuthToken(
@@ -125,10 +125,6 @@ export class SocialController {
             undefined, // refreshToken
             undefined  // expiresIn
           );
-
-          // BÔNUS: Salvar as métricas atuais puxadas da API
-          // Você deve importar o PrismaService ou MetricsService para isso, mas como estamos no controller,
-          // podemos chamar um método do SocialService ou fazer aqui (vamos assumir que será feito dps via cron)
         }
       } else {
         // Fallback simulado para as outras redes
