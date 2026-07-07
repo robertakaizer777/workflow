@@ -7,7 +7,9 @@ export class MetaService {
 
   constructor(private prisma: PrismaService) {}
 
-  async exchangeCodeForToken(code: string, redirectUri: string, clientId: string, clientSecret: string) {
+  async exchangeCodeForToken(code: string, redirectUri: string) {
+    const clientId = process.env.META_CLIENT_ID;
+    const clientSecret = process.env.META_CLIENT_SECRET;
     const url = `https://graph.facebook.com/v18.0/oauth/access_token?client_id=${clientId}&redirect_uri=${redirectUri}&client_secret=${clientSecret}&code=${code}`;
     
     try {

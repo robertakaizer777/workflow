@@ -111,13 +111,7 @@ export class SocialController {
       if (platform.toUpperCase() === 'INSTAGRAM' || platform.toUpperCase() === 'FACEBOOK') {
         // 1. Troca o código pelo token permanente
         const redirectUri = `${host}/social/callback/oauth`; 
-
-        const workspace = await this.socialService.getWorkspaceMetaSettings(workspaceId);
-        if (!workspace?.metaAppId || !workspace?.metaAppSecret) {
-          throw new Error('As credenciais da Meta não estão configuradas.');
-        }
-
-        const accessToken = await this.metaService.exchangeCodeForToken(code, redirectUri, workspace.metaAppId, workspace.metaAppSecret);
+        const accessToken = await this.metaService.exchangeCodeForToken(code, redirectUri);
         
         // 2. Puxa os dados reais de TODAS as contas do Instagram conectadas
         const igAccounts = await this.metaService.getInstagramBusinessAccounts(accessToken);
