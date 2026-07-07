@@ -92,7 +92,21 @@ export default function AgendaPage() {
           )}
 
           {filteredClients.map(client => (
-            <div key={client.id} className="bg-card border border-border hover:border-border/80 transition-colors rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div 
+              key={client.id} 
+              className="bg-card border border-border hover:border-border/80 transition-colors rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 cursor-pointer"
+              onClick={() => {
+                setEditingClient(client);
+                setFormData({
+                  name: client.name || "", company: client.company || "", phone: client.phone || "",
+                  whatsapp: client.whatsapp || "", email: client.email || "", instagram: client.instagram || "",
+                  city: client.city || "", leadSource: client.leadSource || "", projectType: client.projectType || "",
+                  estimatedValue: client.estimatedValue?.toString() || "", priority: client.priority || "MEDIA",
+                  stage: client.stage || "AGENDADO", observations: client.observations || ""
+                });
+                setIsModalOpen(true);
+              }}
+            >
               <div className="flex gap-4">
                 <div className="w-16 h-16 bg-secondary border border-border rounded-xl flex flex-col items-center justify-center shrink-0">
                   <span className="text-xl font-bold text-foreground">{format(new Date(client.updatedAt), 'dd')}</span>

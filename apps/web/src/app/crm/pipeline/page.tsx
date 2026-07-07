@@ -176,6 +176,17 @@ export default function PipelinePage() {
                     draggable
                     onDragStart={(e: any) => handleDragStart(e, client)}
                     onDragEnd={(e: any) => handleDragEnd(e)}
+                    onClick={() => {
+                      setEditingClient(client);
+                      setFormData({
+                        name: client.name || "", company: client.company || "", phone: client.phone || "",
+                        whatsapp: client.whatsapp || "", email: client.email || "", instagram: client.instagram || "",
+                        city: client.city || "", leadSource: client.leadSource || "", projectType: client.projectType || "",
+                        estimatedValue: client.estimatedValue?.toString() || "", priority: client.priority || "MEDIA",
+                        stage: client.stage || "NOVO_INTERESSE", observations: client.observations || ""
+                      });
+                      setIsModalOpen(true);
+                    }}
                     className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 cursor-grab active:cursor-grabbing hover:border-zinc-700 transition-colors shadow-sm"
                   >
                     <h4 className="font-bold text-zinc-200 text-sm mb-0.5">{client.name}</h4>

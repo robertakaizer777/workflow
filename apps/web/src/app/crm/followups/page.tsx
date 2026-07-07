@@ -124,7 +124,20 @@ export default function FollowUpsPage() {
                     <button onClick={() => markAsDone(client)} className="text-sm font-semibold border border-border bg-secondary hover:bg-secondary/80 px-3 py-1.5 rounded-lg transition-colors">
                       Marcar como feito
                     </button>
-                    <button className="text-sm font-medium text-muted-foreground hover:text-foreground">
+                    <button 
+                      onClick={() => {
+                        setEditingClient(client);
+                        setFormData({
+                          name: client.name || "", company: client.company || "", phone: client.phone || "",
+                          whatsapp: client.whatsapp || "", email: client.email || "", instagram: client.instagram || "",
+                          city: client.city || "", leadSource: client.leadSource || "", projectType: client.projectType || "",
+                          estimatedValue: client.estimatedValue?.toString() || "", priority: client.priority || "MEDIA",
+                          stage: client.stage || "FOLLOW_UP", observations: client.observations || ""
+                        });
+                        setIsModalOpen(true);
+                      }}
+                      className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                    >
                       Ver cliente
                     </button>
                   </div>

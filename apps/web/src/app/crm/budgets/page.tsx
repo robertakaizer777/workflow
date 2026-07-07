@@ -102,7 +102,21 @@ export default function BudgetsPage() {
               {filteredClients.map(client => {
                 const daysOpen = differenceInDays(new Date(), new Date(client.updatedAt));
                 return (
-                  <tr key={client.id} className="hover:bg-secondary/30 transition-colors group">
+                  <tr 
+                    key={client.id} 
+                    className="hover:bg-secondary/30 transition-colors group cursor-pointer"
+                    onClick={() => {
+                      setEditingClient(client);
+                      setFormData({
+                        name: client.name || "", company: client.company || "", phone: client.phone || "",
+                        whatsapp: client.whatsapp || "", email: client.email || "", instagram: client.instagram || "",
+                        city: client.city || "", leadSource: client.leadSource || "", projectType: client.projectType || "",
+                        estimatedValue: client.estimatedValue?.toString() || "", priority: client.priority || "MEDIA",
+                        stage: client.stage || "ORCAMENTO_ENVIADO", observations: client.observations || ""
+                      });
+                      setIsModalOpen(true);
+                    }}
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center font-bold text-foreground">
