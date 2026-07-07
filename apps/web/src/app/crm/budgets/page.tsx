@@ -6,11 +6,29 @@ import { Search, Plus } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
 import Link from "next/link";
 import { API_URL } from "@/lib/api";
+import CrmClientModal from "@/components/crm/CrmClientModal";
 
 export default function BudgetsPage() {
   const { user, token } = useStore();
   const [clients, setClients] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingClient, setEditingClient] = useState<any>(null);
+  const [formData, setFormData] = useState({
+    name: "", company: "", phone: "", whatsapp: "", email: "", 
+    instagram: "", city: "", leadSource: "", projectType: "", 
+    estimatedValue: "", priority: "MEDIA", stage: "ORCAMENTO_ENVIADO", observations: ""
+  });
+
+  const openNewModal = () => {
+    setEditingClient(null);
+    setFormData({
+      name: "", company: "", phone: "", whatsapp: "", email: "", 
+      instagram: "", city: "", leadSource: "", projectType: "", 
+      estimatedValue: "", priority: "MEDIA", stage: "ORCAMENTO_ENVIADO", observations: ""
+    });
+    setIsModalOpen(true);
+  };
 
   const fetchClients = () => {
     if (!user || !token) return;
@@ -58,9 +76,9 @@ export default function BudgetsPage() {
                 className="w-full pl-9 pr-4 py-2 bg-secondary/50 border border-border rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none"
               />
             </div>
-            <Link href="/crm/clients" className="bg-white text-black hover:bg-zinc-200 px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-colors">
+            <button onClick={openNewModal} className="bg-white text-black hover:bg-zinc-200 px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-colors">
               <Plus className="w-4 h-4" /> Novo orçamento
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -123,6 +141,17 @@ export default function BudgetsPage() {
             </tbody>
           </table>
         </div>
+
+        <CrmClientModal 
+          isOpen={isModalOpen}
+          onClose={() => { setIsModalOpen(false); setEditingClient(null); }}
+          formData={formData}
+          setFormData={setFormData}
+          onSave={() => { setIsModalOpen(false); setEditingClient(null); fetchClients(); }}
+          user={user}
+          token={token}
+          editingClient={editingClient}
+        />
       </div>
     </div>
   );

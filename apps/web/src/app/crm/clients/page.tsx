@@ -7,6 +7,7 @@ import { ptBR } from "date-fns/locale";
 import { Search, Plus, Edit, Trash2, Eye, X, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_URL } from "@/lib/api";
+import CrmClientModal from "@/components/crm/CrmClientModal";
 
 const STAGES = [
   "Novo interesse", "Primeiro contato", "Briefing recebido", 
@@ -233,92 +234,17 @@ export default function ClientsPage() {
               onClick={() => setIsModalOpen(false)}
             />
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative bg-background border border-border rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
-            >
-              <div className="sticky top-0 bg-background/95 backdrop-blur z-10 p-6 border-b border-border flex items-center justify-between">
-                <h2 className="text-xl font-bold">{editingClient ? 'Editar cliente' : 'Novo cliente'}</h2>
-                <button onClick={() => setIsModalOpen(false)} className="text-muted-foreground hover:text-foreground"><X className="w-5 h-5"/></button>
-              </div>
-
-              <form onSubmit={handleSave} className="p-6 space-y-6">
-                <div>
-                  <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Dados Pessoais</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Nome completo *</label>
-                      <input required type="text" value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Empresa</label>
-                      <input type="text" value={formData.company} onChange={e=>setFormData({...formData, company: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Telefone</label>
-                      <input type="text" value={formData.phone} onChange={e=>setFormData({...formData, phone: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">WhatsApp</label>
-                      <input type="text" value={formData.whatsapp} onChange={e=>setFormData({...formData, whatsapp: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">E-mail</label>
-                      <input type="email" value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Instagram</label>
-                      <input type="text" value={formData.instagram} onChange={e=>setFormData({...formData, instagram: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Cidade</label>
-                      <input type="text" value={formData.city} onChange={e=>setFormData({...formData, city: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Origem do lead</label>
-                      <input type="text" value={formData.leadSource} onChange={e=>setFormData({...formData, leadSource: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t border-border pt-6">
-                  <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Projeto</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Tipo de projeto</label>
-                      <input type="text" value={formData.projectType} onChange={e=>setFormData({...formData, projectType: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Valor estimado (R$)</label>
-                      <input type="number" step="0.01" value={formData.estimatedValue} onChange={e=>setFormData({...formData, estimatedValue: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Prioridade</label>
-                      <select value={formData.priority} onChange={e=>setFormData({...formData, priority: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
-                        {PRIORITIES.map(p => <option key={p} value={p}>{p}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-1 block">Etapa do pipeline</label>
-                      <select value={formData.stage} onChange={e=>setFormData({...formData, stage: e.target.value})} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
-                        {STAGES.map(s => <option key={s} value={s.toUpperCase().replace(' ', '_')}>{s}</option>)}
-                      </select>
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="text-sm text-foreground mb-1 block">Observações</label>
-                      <textarea value={formData.observations} onChange={e=>setFormData({...formData, observations: e.target.value})} rows={3} className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="sticky bottom-0 bg-background/95 backdrop-blur z-10 pt-4 pb-2 border-t border-border flex justify-end gap-3">
-                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg transition-colors">Cancelar</button>
-                  <button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg font-medium text-sm transition-colors">Salvar cliente</button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* Componente Global de Modal */}
+      <CrmClientModal 
+        isOpen={isModalOpen}
+        onClose={() => { setIsModalOpen(false); setEditingClient(null); }}
+        formData={formData}
+        setFormData={setFormData}
+        onSave={() => { setIsModalOpen(false); setEditingClient(null); fetchClients(); }}
+        user={user}
+        token={token}
+        editingClient={editingClient}
+      />
     </div>
   );
 }
