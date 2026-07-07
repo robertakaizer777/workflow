@@ -28,7 +28,7 @@ export const useStore = create<AppState>()(
       
       setSession: (user, token) => {
         if (typeof window !== 'undefined') {
-          document.cookie = `token=${token}; path=/; max-age=86400; samesite=lax`;
+          document.cookie = `token=${token}; path=/; max-age=2592000; samesite=lax`;
         }
         set({ 
           user, 
@@ -52,7 +52,7 @@ export const useStore = create<AppState>()(
       onRehydrateStorage: () => (state) => {
         // Sync token with cookies for Next.js Middleware to read
         if (state?.token && typeof window !== 'undefined') {
-          document.cookie = `token=${state.token}; path=/; max-age=86400; samesite=lax`;
+          document.cookie = `token=${state.token}; path=/; max-age=2592000; samesite=lax`;
         }
       }
     }

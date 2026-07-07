@@ -191,7 +191,7 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="flex-1 p-8 bg-[#f8f9fa] min-h-screen overflow-y-auto">
+    <div className="flex-1 p-4 md:p-8 bg-background min-h-screen overflow-y-auto">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>

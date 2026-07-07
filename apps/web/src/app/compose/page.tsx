@@ -275,7 +275,7 @@ export default function ComposePage() {
   if (!user) return null;
 
   return (
-    <div className="flex-1 p-8 max-w-[1600px] mx-auto overflow-y-auto w-full bg-background min-h-screen relative">
+    <div className="flex-1 p-4 md:p-8 max-w-[1600px] mx-auto overflow-y-auto w-full bg-background min-h-screen relative">
       
       <div className="flex items-center justify-between mb-8">
         <div>

@@ -196,6 +196,8 @@ export default function LoginPage() {
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <input 
                         type="email" 
+                        name="email"
+                        autoComplete="email"
                         required
                         className="w-full pl-10 pr-4 py-3 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
                         placeholder="seu@email.com"
@@ -213,6 +215,8 @@ export default function LoginPage() {
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <input 
                         type="password" 
+                        name="password"
+                        autoComplete="current-password"
                         required
                         className="w-full pl-10 pr-4 py-3 bg-secondary/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
                         placeholder="••••••••"
