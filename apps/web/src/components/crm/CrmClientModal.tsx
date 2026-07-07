@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { API_URL } from "@/lib/api";
@@ -22,10 +23,13 @@ export default function CrmClientModal({
   token,
   editingClient
 }: any) {
+  const [activeTab, setActiveTab] = React.useState("Informações");
+  const TABS = ["Informações", "Projeto", "Orçamento", "Histórico", "Follow-up"];
+
   if (!isOpen) return null;
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!user || !token) return;
     
     const url = editingClient 

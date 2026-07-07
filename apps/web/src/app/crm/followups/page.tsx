@@ -14,7 +14,7 @@ export default function FollowUpsPage() {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<any>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     name: "", company: "", phone: "", whatsapp: "", email: "", 
     instagram: "", city: "", leadSource: "", projectType: "", 
     estimatedValue: "", priority: "MEDIA", stage: "FOLLOW_UP", observations: ""

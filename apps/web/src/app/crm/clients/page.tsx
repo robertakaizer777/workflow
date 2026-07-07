@@ -23,7 +23,7 @@ export default function ClientsPage() {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<any>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     name: "", company: "", phone: "", whatsapp: "", email: "", instagram: "",
     city: "", leadSource: "", projectType: "", estimatedValue: "", priority: "MEDIA", stage: "NOVO_INTERESSE", observations: ""
   });
@@ -224,16 +224,6 @@ export default function ClientsPage() {
         </div>
       </div>
 
-      {/* Modal Novo/Editar */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-              onClick={() => setIsModalOpen(false)}
-            />
-            <motion.div 
       {/* Componente Global de Modal */}
       <CrmClientModal 
         isOpen={isModalOpen}

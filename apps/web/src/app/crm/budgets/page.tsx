@@ -14,18 +14,40 @@ export default function BudgetsPage() {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<any>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     name: "", company: "", phone: "", whatsapp: "", email: "", 
     instagram: "", city: "", leadSource: "", projectType: "", 
-    estimatedValue: "", priority: "MEDIA", stage: "ORCAMENTO_ENVIADO", observations: ""
+    estimatedValue: "", priority: "MEDIA", stage: "ORCAMENTO_ENVIADO", observations: "",
+    budgetVersion: "", budgetDate: "", budgetStatus: ""
   });
 
   const openNewModal = () => {
+    const list = clients.map((c, i) => `${i + 1}. ${c.name} ${c.company ? `— ${c.company}` : ''}`).join('\n');
+    const result = window.prompt(`Selecione o cliente para o orçamento (digite o número):\n\n${list}\n\nOu cancele/deixe em branco para cadastrar um novo cliente do zero.`);
+    
+    if (result && result.trim() !== "") {
+      const index = parseInt(result) - 1;
+      if (!isNaN(index) && clients[index]) {
+        const client = clients[index];
+        setEditingClient(client);
+        setFormData({
+          name: client.name || "", company: client.company || "", phone: client.phone || "",
+          whatsapp: client.whatsapp || "", email: client.email || "", instagram: client.instagram || "",
+          city: client.city || "", leadSource: client.leadSource || "", projectType: client.projectType || "",
+          estimatedValue: client.estimatedValue?.toString() || "", priority: client.priority || "MEDIA",
+          stage: "ORCAMENTO_ENVIADO", observations: client.observations || "",
+          budgetVersion: client.budgetVersion || "", budgetDate: client.budgetDate ? new Date(client.budgetDate).toISOString().split('T')[0] : "", budgetStatus: client.budgetStatus || "Aguardando resposta"
+        });
+        setIsModalOpen(true);
+        return;
+      }
+    }
+
     setEditingClient(null);
     setFormData({
-      name: "", company: "", phone: "", whatsapp: "", email: "", 
-      instagram: "", city: "", leadSource: "", projectType: "", 
-      estimatedValue: "", priority: "MEDIA", stage: "ORCAMENTO_ENVIADO", observations: ""
+      name: "", company: "", phone: "", whatsapp: "", email: "", instagram: "", city: "", leadSource: "",
+      projectType: "", estimatedValue: "", priority: "MEDIA", stage: "ORCAMENTO_ENVIADO", observations: "",
+      budgetVersion: "", budgetDate: "", budgetStatus: "Aguardando resposta"
     });
     setIsModalOpen(true);
   };
@@ -147,7 +169,7 @@ export default function BudgetsPage() {
                         onClick={(e) => {
                           e.stopPropagation(); // Não abrir modal ao clicar em excluir
                           if (confirm("Tem certeza que deseja excluir o orçamento? Isso o retornará para a etapa anterior.")) {
-                            fetch(`${API_URL}/crm/${user.workspaceId}/${client.id}`, {
+                            fetch(`${API_URL}/crm/${user?.workspaceId}/${client.id}`, {
                               method: 'PUT',
                               headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                               body: JSON.stringify({ budgetVersion: null, budgetDate: null, budgetStatus: null, stage: 'NOVO_INTERESSE' })
