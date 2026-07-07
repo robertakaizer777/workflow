@@ -56,7 +56,7 @@ export class SocialCronService {
           }
         }
       } catch (error) {
-        this.logger.error(`Falha ao sincronizar métricas da conexão ${conn.id}`, error);
+        this.logger.error(`Falha ao sincronizar métricas da conexão ${rawConn.id}`, error);
       }
     }
   }
