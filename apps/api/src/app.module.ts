@@ -13,6 +13,7 @@ import { PostsModule } from './posts/posts.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { MailModule } from './mail/mail.module';
+import { CrmModule } from './crm/crm.module';
 
 @Module({
   imports: [
@@ -42,6 +43,9 @@ import { MailModule } from './mail/mail.module';
     
     // Engine de Publicação e Filas
     PostsModule,
+
+    // CRM
+    CrmModule,
     
     // Coleta de Métricas
     MetricsModule,

@@ -2,7 +2,7 @@
 
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { LayoutDashboard, PenSquare, Share2, Calendar, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, PenSquare, Share2, Calendar, Settings, LogOut, Users, Briefcase, Clock, FileText, ChevronDown, ChevronRight, CheckSquare } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useStore } from "@/store/useStore";
@@ -28,6 +28,7 @@ export default function RootLayout({
   const isAuthPage = pathname === "/login" || pathname === "/register" || pathname === "/forgot-password" || pathname === "/reset-password";
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCrmOpen, setIsCrmOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -107,6 +108,39 @@ export default function RootLayout({
                       <Link onClick={() => setIsMobileMenuOpen(false)} href="/integrations" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname === '/integrations' ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
                         <Share2 className="w-4 h-4" /> Integrações
                       </Link>
+
+                      {/* CRM Seção */}
+                      <div className="pt-4 mt-4 border-t border-zinc-800">
+                        <button 
+                          onClick={() => setIsCrmOpen(!isCrmOpen)} 
+                          className="w-full flex items-center justify-between px-3 py-2 text-sm font-bold text-zinc-300 hover:text-white transition-colors"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Briefcase className="w-4 h-4 text-primary" /> CRM
+                          </div>
+                          {isCrmOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                        </button>
+                        
+                        {isCrmOpen && (
+                          <div className="mt-2 space-y-1 pl-4">
+                            <Link onClick={() => setIsMobileMenuOpen(false)} href="/crm/clients" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname.includes('/crm/clients') ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                              <Users className="w-4 h-4" /> Clientes
+                            </Link>
+                            <Link onClick={() => setIsMobileMenuOpen(false)} href="/crm/pipeline" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname.includes('/crm/pipeline') ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                              <LayoutDashboard className="w-4 h-4" /> Pipeline
+                            </Link>
+                            <Link onClick={() => setIsMobileMenuOpen(false)} href="/crm/agenda" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname.includes('/crm/agenda') ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                              <Clock className="w-4 h-4" /> Agenda
+                            </Link>
+                            <Link onClick={() => setIsMobileMenuOpen(false)} href="/crm/budgets" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname.includes('/crm/budgets') ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                              <FileText className="w-4 h-4" /> Orçamentos
+                            </Link>
+                            <Link onClick={() => setIsMobileMenuOpen(false)} href="/crm/followups" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname.includes('/crm/followups') ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                              <CheckSquare className="w-4 h-4" /> Follow-ups
+                            </Link>
+                          </div>
+                        )}
+                      </div>
                     </nav>
 
                     <div className="p-4 border-t border-border space-y-1">

@@ -42,6 +42,7 @@ model Workspace {
   // Integração Oauth da Meta por Workspace (White-Label)
   metaAppId     String?
   metaAppSecret String?
+  clients       Client[]
 }
 
 model WorkspaceMember {
@@ -113,4 +114,28 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Client {
+  id              String   @id @default(uuid())
+  workspaceId     String
+  name            String
+  company         String?
+  phone           String?
+  whatsapp        String?
+  email           String?
+  instagram       String?
+  city            String?
+  leadSource      String?
+  
+  projectType     String?
+  estimatedValue  Float?
+  priority        String? // BAIXA, MEDIA, ALTA
+  stage           String? // NOVO_INTERESSE, PRIMEIRO_CONTATO, etc.
+  observations    String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  workspace       Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
