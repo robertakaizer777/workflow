@@ -41,7 +41,7 @@ export class SocialController {
       return res.status(400).send("Workspace ID é obrigatório para iniciar a conexão.");
     }
 
-    const clientId = process.env.META_CLIENT_ID;
+    const clientId = process.env.META_CLIENT_ID?.trim();
 
     if (!clientId) {
       return res.status(400).send("A integração real com a Meta exige que o dono do SaaS configure o META_CLIENT_ID no .env do servidor.");
