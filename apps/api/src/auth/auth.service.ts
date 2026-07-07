@@ -53,6 +53,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role,
+        workspaceId: workspace.id,
         workspaces: [workspace],
       }
     };
@@ -83,6 +84,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role,
+        workspaceId: user.workspaces[0]?.workspaceId || null,
         workspaces: user.workspaces,
       }
     };
