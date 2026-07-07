@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { Search, Plus } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { API_URL } from "@/lib/api";
 
 const STAGES = [
@@ -119,9 +120,9 @@ export default function PipelinePage() {
               className="w-full pl-9 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-sm focus:ring-1 focus:ring-primary/50 text-white"
             />
           </div>
-          <button className="bg-white hover:bg-zinc-200 text-black px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-colors">
+          <Link href="/crm/clients" className="bg-white hover:bg-zinc-200 text-black px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-colors">
             <Plus className="w-4 h-4" /> Novo cliente
-          </button>
+          </Link>
         </div>
       </div>
 

@@ -1,16 +1,13 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { CrmService } from './crm.service';
-
-// Para simplificar no MVP, estamos pegando o workspaceId por parâmetro ou query se aplicável,
-// Mas se já houver um AuthGuard/JwtGuard global, o user viria do req.user.
-// Assumindo que a requisição de CRM virá com /crm/:workspaceId
+import { CreateClientDto, UpdateClientDto } from './crm.dto';
 
 @Controller('crm')
 export class CrmController {
   constructor(private readonly crmService: CrmService) {}
 
   @Post(':workspaceId')
-  async createClient(@Param('workspaceId') workspaceId: string, @Body() body: any) {
+  async createClient(@Param('workspaceId') workspaceId: string, @Body() body: CreateClientDto) {
     return this.crmService.createClient(workspaceId, body);
   }
 
@@ -28,7 +25,7 @@ export class CrmController {
   async updateClient(
     @Param('workspaceId') workspaceId: string, 
     @Param('id') id: string, 
-    @Body() body: any
+    @Body() body: UpdateClientDto
   ) {
     return this.crmService.updateClient(id, workspaceId, body);
   }

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { Search, Plus } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
+import Link from "next/link";
 import { API_URL } from "@/lib/api";
 
 export default function BudgetsPage() {
@@ -57,9 +58,9 @@ export default function BudgetsPage() {
                 className="w-full pl-9 pr-4 py-2 bg-secondary/50 border border-border rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none"
               />
             </div>
-            <button className="bg-white text-black hover:bg-zinc-200 px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-colors">
+            <Link href="/crm/clients" className="bg-white text-black hover:bg-zinc-200 px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-colors">
               <Plus className="w-4 h-4" /> Novo orçamento
-            </button>
+            </Link>
           </div>
         </div>
 
