@@ -134,6 +134,10 @@ model Client {
   stage           String? // NOVO_INTERESSE, PRIMEIRO_CONTATO, etc.
   observations    String?
   
+  budgetVersion   String?
+  budgetDate      DateTime?
+  budgetStatus    String? // Aguardando, Aprovado, Recusado
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   

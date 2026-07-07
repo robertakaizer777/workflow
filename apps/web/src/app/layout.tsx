@@ -123,6 +123,9 @@ export default function RootLayout({
                         
                         {isCrmOpen && (
                           <div className="mt-2 space-y-1 pl-4">
+                            <Link onClick={() => setIsMobileMenuOpen(false)} href="/crm/dashboard" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname === '/crm/dashboard' ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
+                              <LayoutDashboard className="w-4 h-4" /> Dashboard
+                            </Link>
                             <Link onClick={() => setIsMobileMenuOpen(false)} href="/crm/clients" className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${pathname.includes('/crm/clients') ? 'bg-primary/10 text-primary' : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}`}>
                               <Users className="w-4 h-4" /> Clientes
                             </Link>

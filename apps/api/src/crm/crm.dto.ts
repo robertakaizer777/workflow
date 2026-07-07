@@ -52,6 +52,18 @@ export class CreateClientDto {
   @IsString()
   @IsOptional()
   observations?: string;
+
+  @IsString()
+  @IsOptional()
+  budgetVersion?: string;
+
+  @IsString()
+  @IsOptional()
+  budgetDate?: string;
+
+  @IsString()
+  @IsOptional()
+  budgetStatus?: string;
 }
 
 export class UpdateClientDto extends CreateClientDto {}

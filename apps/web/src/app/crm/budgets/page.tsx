@@ -112,7 +112,8 @@ export default function BudgetsPage() {
                         whatsapp: client.whatsapp || "", email: client.email || "", instagram: client.instagram || "",
                         city: client.city || "", leadSource: client.leadSource || "", projectType: client.projectType || "",
                         estimatedValue: client.estimatedValue?.toString() || "", priority: client.priority || "MEDIA",
-                        stage: client.stage || "ORCAMENTO_ENVIADO", observations: client.observations || ""
+                        stage: client.stage || "ORCAMENTO_ENVIADO", observations: client.observations || "",
+                        budgetVersion: client.budgetVersion || "", budgetDate: client.budgetDate ? new Date(client.budgetDate).toISOString().split('T')[0] : "", budgetStatus: client.budgetStatus || "Aguardando resposta"
                       });
                       setIsModalOpen(true);
                     }}
@@ -129,10 +130,12 @@ export default function BudgetsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-medium text-foreground">{formatCurrency(client.estimatedValue)}</td>
-                    <td className="px-6 py-4 text-center text-muted-foreground">V1</td>
-                    <td className="px-6 py-4 font-medium">{format(new Date(client.updatedAt), 'dd/MM/yyyy')}</td>
+                    <td className="px-6 py-4 text-center text-muted-foreground">{client.budgetVersion || '-'}</td>
+                    <td className="px-6 py-4 font-medium">{client.budgetDate ? format(new Date(client.budgetDate), 'dd/MM/yyyy') : '-'}</td>
                     <td className="px-6 py-4">
-                      <span className="text-yellow-500 font-medium text-xs">Aguardando</span>
+                      <span className={`${client.budgetStatus === 'Aprovado' ? 'text-green-500' : client.budgetStatus === 'Recusado' ? 'text-red-500' : 'text-yellow-500'} font-medium text-xs`}>
+                        {client.budgetStatus || 'Aguardando'}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span className={`${daysOpen > 15 ? 'text-yellow-500 font-bold' : 'text-muted-foreground'} flex items-center justify-center gap-1`}>
@@ -140,7 +143,21 @@ export default function BudgetsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-red-500 font-medium text-xs hover:underline opacity-0 group-hover:opacity-100 transition-opacity">Excluir</button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation(); // Não abrir modal ao clicar em excluir
+                          if (confirm("Tem certeza que deseja excluir o orçamento? Isso o retornará para a etapa anterior.")) {
+                            fetch(`${API_URL}/crm/${user.workspaceId}/${client.id}`, {
+                              method: 'PUT',
+                              headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ budgetVersion: null, budgetDate: null, budgetStatus: null, stage: 'NOVO_INTERESSE' })
+                            }).then(() => fetchClients());
+                          }
+                        }}
+                        className="text-red-500 font-medium text-xs hover:underline opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        Excluir
+                      </button>
                     </td>
                   </tr>
                 );

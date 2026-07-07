@@ -22,6 +22,9 @@ export class CrmService {
         priority: data.priority,
         stage: data.stage || 'NOVO_INTERESSE',
         observations: data.observations,
+        budgetVersion: data.budgetVersion,
+        budgetDate: data.budgetDate ? new Date(data.budgetDate) : null,
+        budgetStatus: data.budgetStatus,
       },
     });
   }
@@ -45,9 +48,14 @@ export class CrmService {
     // Validate if exists
     await this.getClientById(id, workspaceId);
 
+    const updateData = { ...data };
+    if (updateData.budgetDate) {
+      updateData.budgetDate = new Date(updateData.budgetDate);
+    }
+
     return this.prisma.client.update({
       where: { id },
-      data,
+      data: updateData,
     });
   }
 
