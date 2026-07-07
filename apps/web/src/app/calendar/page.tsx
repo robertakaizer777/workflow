@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday } from "date-fns";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Clock, X, Calendar as CalendarIcon, Save, Image as ImageIcon, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/store/useStore";
@@ -245,6 +245,11 @@ export default function CalendarPage() {
           </div>
           
           <div className="grid grid-cols-7 auto-rows-fr min-h-[700px]">
+            {/* Espaços vazios antes do dia 1 */}
+            {Array.from({ length: getDay(startOfMonth(currentDate)) }).map((_, idx) => (
+              <div key={`empty-${idx}`} className="border-r border-b border-border/30 bg-background/50" />
+            ))}
+
             {daysInMonth.map((day, idx) => {
               const dayPosts = posts.filter(post => 
                 post.scheduledFor && format(new Date(post.scheduledFor), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd')
