@@ -7,6 +7,8 @@ import { ChevronLeft, ChevronRight, Clock, X, Calendar as CalendarIcon, Save, Im
 import { useStore } from "@/store/useStore";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { API_URL } from "@/lib/api";
+
 export default function CalendarPage() {
   const { user, token } = useStore();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -26,7 +28,7 @@ export default function CalendarPage() {
 
   const fetchPosts = () => {
     if (!user || !token) return;
-    fetch(`http://localhost:4001/posts/${user.workspaceId}`, {
+    fetch(`${API_URL}/posts/${user.workspaceId}`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
     .then(res => res.json())

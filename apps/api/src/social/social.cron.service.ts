@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 import { MetaService } from './meta.service';
+import { SocialService } from './social.service';
 
 @Injectable()
 export class SocialCronService {
@@ -10,6 +11,7 @@ export class SocialCronService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly metaService: MetaService,
+    private readonly socialService: SocialService,
   ) {}
 
   /**
@@ -21,12 +23,16 @@ export class SocialCronService {
     this.logger.log('Iniciando sincronização de métricas das contas sociais...');
     
     // 1. Busca todas as conexões ativas
-    const connections = await this.prisma.socialConnection.findMany({
+    const rawConnections = await this.prisma.socialConnection.findMany({
       where: { status: 'ACTIVE', platform: { in: ['INSTAGRAM', 'FACEBOOK'] } }
     });
 
-    for (const conn of connections) {
+    for (const rawConn of rawConnections) {
       try {
+        // Descriptografa o token usando o service
+        const conn = await this.socialService.getConnectionDecrypted(rawConn.id);
+        if (!conn) continue;
+        
         if (conn.platform === 'INSTAGRAM') {
           // Puxa as métricas atuais usando a Meta API
           const metricsRes = await fetch(`https://graph.facebook.com/v18.0/${conn.pageId}?fields=followers_count,media_count&access_token=${conn.accessToken}`);
@@ -83,7 +89,7 @@ export class SocialCronService {
         
         if (hasInstagram) {
           // Busca a conexão ativa do workspace para o Instagram
-          const connection = await this.prisma.socialConnection.findFirst({
+          const rawConn = await this.prisma.socialConnection.findFirst({
             where: {
               workspaceId: post.workspaceId,
               platform: 'INSTAGRAM',
@@ -91,15 +97,18 @@ export class SocialCronService {
             }
           });
 
-          if (connection) {
-            // Publica de verdade na Meta API
-            const postId = await this.metaService.publishInstagramPost(
-              connection.accessToken,
-              connection.pageId, // igAccountId guardado em pageId
-              mediaUrls,
-              post.content
-            );
-            this.logger.log(`Post [${post.id}] publicado no Instagram oficial! ID Meta: ${postId}`);
+          if (rawConn) {
+            const connection = await this.socialService.getConnectionDecrypted(rawConn.id);
+            if (connection) {
+              // Publica de verdade na Meta API
+              const postId = await this.metaService.publishInstagramPost(
+                connection.accessToken,
+                connection.pageId, // igAccountId guardado em pageId
+                mediaUrls,
+                post.content
+              );
+              this.logger.log(`Post [${post.id}] publicado no Instagram oficial! ID Meta: ${postId}`);
+            }
           } else {
              this.logger.warn(`Workspace ${post.workspaceId} não tem Instagram ativo.`);
           }
