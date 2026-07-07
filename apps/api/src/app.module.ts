@@ -15,8 +15,12 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { MailModule } from './mail/mail.module';
 import { CrmModule } from './crm/crm.module';
 
+import { ScheduleModule } from '@nestjs/schedule';
+
 @Module({
   imports: [
+    // Cron Jobs (Robôs de fundo)
+    ScheduleModule.forRoot(),
     // Lê o .env
     ConfigModule.forRoot({ isGlobal: true }),
     

@@ -77,4 +77,40 @@ export class MetaService {
       throw new HttpException('Falha ao extrair dados do Instagram. Verifique se sua conta é Profissional/Business.', HttpStatus.BAD_REQUEST);
     }
   }
+
+  async publishInstagramPost(accessToken: string, igAccountId: string, mediaUrls: string[], caption: string) {
+    if (!mediaUrls || mediaUrls.length === 0) {
+      throw new Error("Mídia obrigatória para publicar no Instagram");
+    }
+
+    // A Graph API do Instagram requer hospedar a imagem temporariamente
+    const imageUrl = mediaUrls[0]; 
+
+    try {
+      // Passo 1: Criar o Container de Mídia
+      const containerUrl = `https://graph.facebook.com/v18.0/${igAccountId}/media?image_url=${encodeURIComponent(imageUrl)}&caption=${encodeURIComponent(caption)}&access_token=${accessToken}`;
+      const containerRes = await fetch(containerUrl, { method: 'POST' });
+      const containerData = await containerRes.json();
+
+      if (containerData.error) {
+        throw new Error(containerData.error.message);
+      }
+
+      const creationId = containerData.id;
+
+      // Passo 2: Publicar o Container
+      const publishUrl = `https://graph.facebook.com/v18.0/${igAccountId}/media_publish?creation_id=${creationId}&access_token=${accessToken}`;
+      const publishRes = await fetch(publishUrl, { method: 'POST' });
+      const publishData = await publishRes.json();
+
+      if (publishData.error) {
+        throw new Error(publishData.error.message);
+      }
+
+      return publishData.id; // Retorna o ID da postagem oficial
+    } catch (err) {
+      this.logger.error('Falha ao publicar no Instagram API:', err);
+      throw err;
+    }
+  }
 }

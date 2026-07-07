@@ -123,7 +123,7 @@ export default function ComposePage() {
     }
 
     // Busca conexões para permitir escolher em qual conta postar
-    fetch(`http://localhost:4001/social/${user.workspaceId}`, {
+    fetch(`${API_URL}/social/${user.workspaceId}`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
       .then((res) => res.json())
