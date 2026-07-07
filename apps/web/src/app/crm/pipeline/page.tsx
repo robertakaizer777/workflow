@@ -68,6 +68,7 @@ export default function PipelinePage() {
   const handleDrop = async (e: React.DragEvent, targetStage: string) => {
     e.preventDefault();
     if (!draggedItem || draggedItem.stage === targetStage) return;
+    if (!user || !token) return;
 
     // Update optimistic UI
     const updatedClient = { ...draggedItem, stage: targetStage };
@@ -156,7 +157,7 @@ export default function PipelinePage() {
                     layoutId={client.id}
                     draggable
                     onDragStart={(e: any) => handleDragStart(e, client)}
-                    onDragEnd={handleDragEnd}
+                    onDragEnd={(e: any) => handleDragEnd(e)}
                     className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 cursor-grab active:cursor-grabbing hover:border-zinc-700 transition-colors shadow-sm"
                   >
                     <h4 className="font-bold text-zinc-200 text-sm mb-0.5">{client.name}</h4>

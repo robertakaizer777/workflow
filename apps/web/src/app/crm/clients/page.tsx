@@ -71,6 +71,7 @@ export default function ClientsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir?")) return;
+    if (!user || !token) return;
     try {
       await fetch(`${API_URL}/crm/${user.workspaceId}/${id}`, {
         method: "DELETE",

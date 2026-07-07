@@ -27,6 +27,7 @@ export default function FollowUpsPage() {
   }, [user, token]);
 
   const markAsDone = async (client: any) => {
+    if (!user || !token) return;
     try {
       await fetch(`${API_URL}/crm/${user?.workspaceId}/${client.id}`, {
         method: "PUT",
