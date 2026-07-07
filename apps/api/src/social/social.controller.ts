@@ -41,10 +41,10 @@ export class SocialController {
       return res.status(400).send("Workspace ID é obrigatório para iniciar a conexão.");
     }
 
-    // Busca as chaves personalizadas do Workspace
-    const workspace = await this.socialService.getWorkspaceMetaSettings(workspaceId);
-    if (!workspace?.metaAppId) {
-      return res.status(400).send("As credenciais da Meta não foram configuradas para este Workspace.");
+    const clientId = process.env.META_CLIENT_ID;
+
+    if (!clientId) {
+      return res.status(400).send("As credenciais globais da Meta não foram configuradas no servidor (.env).");
     }
 
     // O redirectUri será dinâmico para rodar tanto local quanto na nuvem
@@ -52,9 +52,7 @@ export class SocialController {
     const redirectUri = `${host}/social/callback/oauth`;
     
     // Passamos tudo empacotado no STATE
-    const statePayload = Buffer.from(JSON.stringify({ token, workspaceId, platform, host })).toString('base64');
-    
-    const clientId = workspace.metaAppId; 
+    const statePayload = Buffer.from(JSON.stringify({ token, workspaceId, platform, host })).toString('base64'); 
     
     let oauthUrl = '';
 
