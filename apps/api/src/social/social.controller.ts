@@ -143,11 +143,13 @@ export class SocialController {
         );
       }
 
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
       // Redireciona de volta para o Dashboard com mensagem de Sucesso
-      return res.redirect('http://localhost:3000/integrations?success=true');
+      return res.redirect(`${frontendUrl}/integrations?success=true`);
     } catch (error) {
       console.error("Erro no callback OAuth", error);
-      return res.redirect('http://localhost:3000/integrations?error=sync_failed');
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      return res.redirect(`${frontendUrl}/integrations?error=sync_failed`);
     }
   }
 
