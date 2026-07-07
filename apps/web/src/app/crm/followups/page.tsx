@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { Search, Plus, AlertTriangle, ExternalLink, Mail } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
-
-const API_URL = "http://localhost:4001";
+import { API_URL } from "@/lib/api";
 
 export default function FollowUpsPage() {
   const { user, token } = useStore();

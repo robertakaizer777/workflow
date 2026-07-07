@@ -6,8 +6,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Search, Plus, Edit, Trash2, Eye, X, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const API_URL = "http://localhost:4001";
+import { API_URL } from "@/lib/api";
 
 const STAGES = [
   "Novo interesse", "Primeiro contato", "Briefing recebido", 

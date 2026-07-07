@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { Search, Plus } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
-
-const API_URL = "http://localhost:4001";
+import { API_URL } from "@/lib/api";
 
 export default function BudgetsPage() {
   const { user, token } = useStore();

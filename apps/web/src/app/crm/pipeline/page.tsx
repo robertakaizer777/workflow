@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { Search, Plus } from "lucide-react";
 import { motion } from "framer-motion";
-
-const API_URL = "http://localhost:4001";
+import { API_URL } from "@/lib/api";
 
 const STAGES = [
   "NOVO_INTERESSE", "PRIMEIRO_CONTATO", "BRIEFING_RECEBIDO", 
