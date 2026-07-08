@@ -1,15 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Users, Activity, TrendingUp, MousePointerClick, 
   ArrowUpRight, ArrowDownRight, CalendarRange, 
-  Sparkles, Zap, PieChart, LayoutDashboard, Heart, MessageSquare, Share2, Clapperboard, Layers, Image as ImageIcon, Video, FileText, Smartphone
+  Sparkles, Zap, PieChart, LayoutDashboard, Heart, MessageSquare, Share2, Clapperboard, Layers, Image as ImageIcon, Video, FileText, Smartphone,
+  Download
 } from "lucide-react";
 import { FaInstagram, FaFacebook, FaYoutube, FaTiktok, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { useStore } from "@/store/useStore";
 import { API_URL } from "@/lib/api";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 // Constantes Visuais adaptadas para o Dark/Light theme sem quebrar o Shadcn
 const platformsMeta = [
@@ -167,22 +170,66 @@ export default function DashboardPage() {
     { id: 4, title: "Cliques no Link", value: currentData.clicks.toLocaleString(), change: "+24.4%", trend: "up", icon: <MousePointerClick className="w-5 h-5 text-amber-400" /> },
   ];
 
+  const dashboardRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const exportToPDF = async () => {
+    if (!dashboardRef.current) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(dashboardRef.current, {
+        scale: 2, // Melhor qualidade
+        useCORS: true,
+        backgroundColor: "#09090b" // bg-background padrão do dark theme
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+      });
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`relatorio-metricas-${format(new Date(), "dd-MM-yyyy")}.pdf`);
+    } catch (err) {
+      console.error("Erro ao gerar PDF", err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   // Identifica quais plataformas realmente têm dados para exibir as abas
   const dynamicPlatforms = rawMetrics && rawMetrics.breakdownByPlatform 
     ? rawMetrics.breakdownByPlatform.map((b: any) => b.platform)
     : [];
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col overflow-y-auto">
+    <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col overflow-y-auto" ref={dashboardRef}>
       
       {/* Header Clássico Preservado */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 data-html2canvas-ignore">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 to-zinc-500">Visão Geral</h1>
           <p className="text-muted-foreground mt-1 text-sm">Métricas consolidadas de todas as suas contas conectadas.</p>
         </div>
         
-        <div className="flex items-center gap-2 p-1 bg-secondary rounded-lg border border-border">
+        <div className="flex items-center gap-2 p-1 bg-secondary rounded-lg border border-border" data-html2canvas-ignore>
+          
+          <button
+            onClick={exportToPDF}
+            disabled={isExporting}
+            className="px-3 py-1.5 mr-2 rounded-md text-sm font-medium transition-all flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+            title="Baixar Relatório (PDF)"
+          >
+            {isExporting ? <span className="animate-spin mr-2 border-2 border-t-transparent border-white rounded-full w-4 h-4"></span> : <Download className="w-4 h-4 mr-2" />}
+            {isExporting ? "Gerando..." : "Baixar PDF"}
+          </button>
+          
+          <div className="w-px h-6 bg-border mx-1"></div>
+
           {["24h", "7d", "30d"].map((range) => (
             <button
               key={range}
