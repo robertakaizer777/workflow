@@ -227,7 +227,7 @@ export default function ComposePage() {
     try {
       let scheduledFor = undefined;
       if (scheduledDate && scheduledTime) scheduledFor = new Date(`${scheduledDate}T${scheduledTime}:00`).toISOString();
-      const mockMediaUrls = mediaPreviews.length > 0 ? ["https://picsum.photos/400/300"] : [];
+      const mockMediaUrls = mediaPreviews.length > 0 ? ["https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png"] : [];
       
       const targets = effectiveConnections
         .filter(c => activeBasePlatforms.includes(c.platform))

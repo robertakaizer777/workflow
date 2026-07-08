@@ -98,6 +98,10 @@ export class MetaService {
 
       const creationId = containerData.id;
 
+      // Facebook demora alguns segundos para processar a imagem internamente.
+      // Sem esse delay, a API joga o erro "Media ID is not available".
+      await new Promise(resolve => setTimeout(resolve, 5000));
+
       // Passo 2: Publicar o Container
       const publishUrl = `https://graph.facebook.com/v18.0/${igAccountId}/media_publish?creation_id=${creationId}&access_token=${accessToken}`;
       const publishRes = await fetch(publishUrl, { method: 'POST' });
