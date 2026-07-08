@@ -85,19 +85,18 @@ export class SocialCronService {
         const platforms = JSON.parse(post.platforms || '[]');
         const mediaUrls = JSON.parse(post.mediaUrls || '[]');
         
-        const hasInstagram = platforms.some((p: string) => p.includes('INSTAGRAM'));
+        // Filtra todas as plataformas que são de INSTAGRAM
+        const instagramPlatforms = platforms.filter((p: string) => p.includes('INSTAGRAM'));
         
-        if (hasInstagram) {
-          // Busca a conexão ativa do workspace para o Instagram
-          const rawConn = await this.prisma.socialConnection.findFirst({
-            where: {
-              workspaceId: post.workspaceId,
-              platform: 'INSTAGRAM',
-              status: 'ACTIVE'
-            }
+        for (const igPlatform of instagramPlatforms) {
+          const connectionId = igPlatform.split(':::')[0];
+
+          // Busca a conexão EXATA que o usuário escolheu
+          const rawConn = await this.prisma.socialConnection.findUnique({
+            where: { id: connectionId }
           });
 
-          if (rawConn) {
+          if (rawConn && rawConn.status === 'ACTIVE') {
             const connection = await this.socialService.getConnectionDecrypted(rawConn.id);
             if (connection) {
               // Publica de verdade na Meta API
@@ -107,10 +106,10 @@ export class SocialCronService {
                 mediaUrls,
                 post.content
               );
-              this.logger.log(`Post [${post.id}] publicado no Instagram oficial! ID Meta: ${postId}`);
+              this.logger.log(`Post [${post.id}] publicado na conta EXATA ${connection.username} (ID Meta: ${postId})`);
             }
           } else {
-             this.logger.warn(`Workspace ${post.workspaceId} não tem Instagram ativo.`);
+             this.logger.warn(`Conexão ${connectionId} não encontrada ou inativa para o post ${post.id}.`);
           }
         }
 
